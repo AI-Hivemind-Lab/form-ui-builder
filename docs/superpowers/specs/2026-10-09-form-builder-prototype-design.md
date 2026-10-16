@@ -7,7 +7,7 @@ Status: Draft for review
 
 An interactive, throwaway web prototype of Anduin's internal **Form Builder** (preview/fill mode plus light editing), driven by a Form Builder JSON export of a digitized fund subscription document. It is for demoing and exploring the interface. It is not production code.
 
-**Source:** `demo form-content.json` (an LP Interest Transfer Agreement demo form). Only `namespaceFormSchemaMap[defaultNamespace]` (`main`) is used. `rules`, `libs`, `triggerRuleByProperty`, `cueFieldSchemas` and `gaiaLogicVersion` are ignored.
+**Source:** `/Users/ops/Downloads/demo form-content.json` (an LP Interest Transfer Agreement demo form). Only `namespaceFormSchemaMap[defaultNamespace]` (`main`) is used. `rules`, `libs`, `triggerRuleByProperty`, `cueFieldSchemas` and `gaiaLogicVersion` are ignored.
 
 **Success criteria**
 1. The demo form renders from the JSON and visually matches the reference screenshot (3-column layout: Table of Contents, form canvas, tools panel).

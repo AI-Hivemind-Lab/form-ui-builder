@@ -1,16 +1,16 @@
 import type { Anchors } from '../../model/pdfStore';
 import type { FormDoc } from '../../model/types';
 import type { PageText } from '../pdfText';
-import { labelCandidates, nameQuestionPages, addressCandidates, duplicateCandidates, fieldsNearSignature, mixedPageCandidates, optionGroupCandidates, requiredFieldCandidates, signatureCandidates, supportingDocCandidates, targetPageCandidates } from './candidates';
+import { groupLabelCandidates, labelCandidates, nameQuestionPages, addressCandidates, duplicateCandidates, fieldsNearSignature, mixedPageCandidates, optionGroupCandidates, requiredFieldCandidates, signatureCandidates, supportingDocCandidates, targetPageCandidates } from './candidates';
 import { askValidated, askVoted, type Ask } from './client';
-import { ACRONYM_SYSTEM, ADDRESS_SYSTEM, DUPLICATES_SYSTEM, INVESTOR_TYPE_SYSTEM, OPTIONAL_SYSTEM, PAGE_STRUCTURE_SYSTEM, SIGNATURE_SYSTEM, LABELS_SYSTEM, SUPPORTING_DOCS_SYSTEM, EMBEDDED_PDFS_SYSTEM, GROUPING_SYSTEM } from './prompts';
+import { ACRONYM_SYSTEM, ADDRESS_SYSTEM, DUPLICATES_SYSTEM, INVESTOR_TYPE_SYSTEM, OPTIONAL_SYSTEM, PAGE_STRUCTURE_SYSTEM, SIGNATURE_SYSTEM, LABELS_SYSTEM, GROUP_LABELS_SYSTEM, SUPPORTING_DOCS_SYSTEM, EMBEDDED_PDFS_SYSTEM, GROUPING_SYSTEM } from './prompts';
 import { childrenOf, closeRange } from '../grouping';
 import { groupPageFacts } from './groupFacts';
 import { composeFileName, embeddedPdfFacts, overlaps, pageToPrecede, trimSignaturePages } from './embeddedPdfs';
 import { confirmationFor } from '../standards/embeddedConfirmation';
 import { MAY_BE_REQUIRED } from './supportingDocs';
 import type { Decision } from './types';
-import { validateAcronyms, validateDuplicates, validateInvestorType, validateMoves, validatePicks, validateSignatures, validateLabelPicks, validateSupportingDocs, validateEmbeddedPdfs, validateGroups } from './validate';
+import { validateAcronyms, validateDuplicates, validateInvestorType, validateMoves, validatePicks, validateSignatures, validateLabelPicks, validateGroupLabelPicks, validateSupportingDocs, validateEmbeddedPdfs, validateGroups } from './validate';
 
 export interface JudgeInputs {
   doc: FormDoc;
@@ -224,6 +224,26 @@ export async function judgeForm(inputs: JudgeInputs, ask: Ask, onProgress: (mess
           data: { kind: 'label', alias: p.alias, text, source: 'ai' },
         });
       });
+    }
+    // the questions of Yes/No and checkbox groups that were never highlighted
+    const groups = groupLabelCandidates(doc, anchors, pages).slice(0, 120);
+    if (groups.length > 0) {
+      onProgress('Reading the questions printed above choices without a label…');
+      for (let at = 0; at < groups.length; at += 40) {
+        const chunk = groups.slice(at, at + 40);
+        const offered = new Map(chunk.map((g) => [g.alias, g.lines.length]));
+        const picks = await askValidated(ask, `group-labels:${at}`, GROUP_LABELS_SYSTEM, JSON.stringify({ groups: chunk.map((g) => ({ alias: g.alias, page: g.page, lines: g.lines })) }), (raw) => validateGroupLabelPicks(raw, offered));
+        picks.forEach((p) => {
+          const g = chunk.find((x) => x.alias === p.alias) as (typeof chunk)[number];
+          const text = g.lines.slice(p.from, p.to + 1).join(' ').replace(/\s+/g, ' ').trim();
+          out.push({
+            id: `label:${p.alias}`, title: `Question "${text.slice(0, 80)}" for ${p.alias}`,
+            detail: `The PDF prints this above the boxes on page ${g.page}; the AI chose the lines (${p.from}–${p.to}) that are the question.`,
+            evidence: { page: g.page, quote: text.slice(0, 200) }, confidence: p.confidence, defaultAccepted: p.confidence === 'high',
+            data: { kind: 'label', alias: p.alias, text, source: 'ai' },
+          });
+        });
+      }
     }
     if (none.length > 0) notes.push(`Labels: ${none.length} field(s) have no printed text near their box (${none.slice(0, 3).join(', ')}${none.length > 3 ? ', …' : ''}); reading a screenshot of the page is not built yet.`);
     return out;

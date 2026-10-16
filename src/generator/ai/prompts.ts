@@ -143,3 +143,39 @@ Rules:
 - "kind": "section" or "conditional".
 Answer: {"groups": [{"name": string, "start": number, "end": number, "kind": "section"|"conditional", "controlIndex": number|null, "condition": string|null, "confidence": "high"|"medium"|"low", "reason": string}]}
 If nothing needs grouping answer {"groups": []}.`;
+
+
+export const STRUCTURE_SYSTEM = `${COMMON}
+
+TASK: the annotation of this sub-doc left some objects outside every page of the form, and some pages have no title. Say where the loose objects go and what the untitled pages are called, using the sub-doc's own headings.
+You get "headings" (id, PDF page as printed, text) in reading order: the section headings the program read from the PDF; "allPages": every page the annotation has (name, title, the PDF page it starts on): the only pages a run may be put into; "pages": those that are not titled by a highlight (name, the title the program gives now and where it came from, the PDF page it starts on, "under" the heading it falls under, "candidates" the headings near its start, and "firstTexts" the first words on the page); and "runs": loose objects that are neighbours in the PDF under one heading (id, PDF pages, how many objects, their kinds, a few "sample" aliases with their text, "under" the heading, "hideable", and the program's "suggestion").
+For each run answer ONE action:
+- "page": the objects belong with an existing page of "allPages" (copy its name exactly): the page is the same section of the sub-doc. Never name a page that is not in "allPages".
+- "new": a page of its own, for a section that has no page yet. Give "headingId" of the heading that names the section, or, when no heading does, a "title" in plain words.
+- "hidden": ONLY when "hideable" is true (signature blocks and fields the General Partner completes). Never hide a question or a field an investor fills in: they must be visible to be filled.
+Keep the suggestion unless the headings or the content show it is wrong. A heading that is really a sentence of body text, a name on a signature block or a sub-heading inside a section (an "A." inside section K) is not a section: do not make a page of it. Runs of one section go to one page (the same "headingId" or the same page name). Pages are read in PDF order: a section starts at its heading.
+For each page in "pages" answer its title: the "headingId" of the heading that names this page, or a "title" in plain words when no heading fits. A title is human-readable: never an alias, never words glued together; use the document's own wording and numbering ("E. Supplemental Data for Entities"). If the page follows the sections around it (after F comes G), the heading in sequence is usually its name. A heading names a page only when what is on the page belongs to that heading's section (look at "firstTexts"): a heading printed pages earlier, above other content, is not its name; then say in plain words what the page is, with the words of its name (a page named "aml" about anti-money-laundering is "AML") or of what it holds.
+Answer:
+{"runs": [{"run": string, "action": "page"|"new"|"hidden", "page": string|null, "headingId": string|null, "title": string|null, "reason": string}], "pages": [{"page": string, "headingId": string|null, "title": string|null}]}
+Leave a run or page out when the suggestion is right.`;
+
+
+export const GROUP_LABELS_SYSTEM = `${COMMON}
+
+TASK: some questions of the form (Yes/No questions, lists of checkboxes) were never highlighted in the annotation, so they have no question text. For each one you get "lines": the lines the PDF prints just above and beside its boxes, in reading order (index 0 first), nearest to the boxes last.
+Choose the run of neighbouring lines that is THIS question: the sentence (or the numbered sentence) that the boxes answer. Answer with the index of its first line ("from") and of its last line ("to"). Never write or change any text.
+Rules: the question usually ends right above the boxes and starts at its number ("3. Is the Investor ...") or at the line after the previous question's boxes or a heading; take all of its lines. A section heading, a line that belongs to the question before, the text of another widget, or a sentence of body text above the question is not part of it: leave it out. If none of the lines is this question, answer null for that group.
+Answer: {"labels": [{"alias": string, "from": number|null, "to": number|null, "confidence": "high"|"medium"|"low"}]}`;
+
+export const COVERAGE_SYSTEM = `${COMMON}
+
+TASK: some text printed in the PDF appears nowhere on the generated form. For each piece decide whether the form is missing it.
+You get "blocks": neighbouring printed lines the form does not show (id, PDF page as printed, "top" = height on the page from 0 at the top to 1, the text, "nearSignature", and "above": the text of the form element that sits right above it on that page); and "pages": runs of whole PDF pages the form does not show at all (id, from, to, the first uncovered lines), with the section "headings" the program read from the PDF.
+For each block answer:
+- "add": text an investor should read on the form: an explanation, a note, a definition, instructions that apply to the questions, the text of a footnote, a statement the questions depend on. It will be added as a paragraph, word for word.
+- "ignore": it does not belong on the form. Give the reason in a few words: "footer or page number", "signature block" (names, titles, dates and lines for signers; text printed beside a signature), "for the General Partner's use", "blank line to fill in on paper", "table of contents", "the form words it differently" (the form says "check" where the PDF says "initial", or reuses the question in other words), or "part of a document" (legal text of an agreement or annex that belongs to an embedded page).
+When unsure, answer "add" with confidence "low": a paragraph the person deletes costs less than a lost note.
+For each page run answer "embed" (the investor should read these pages: a part of the sub-doc such as an annex, exhibit, notice or form; give the "headingId" of the heading that names it, or a "name" in plain words) or "ignore" (blank pages, a cover, a table of contents, pages the investor never needs; say why).
+Answer:
+{"blocks": [{"id": string, "action": "add"|"ignore", "reason": string, "confidence": "high"|"medium"|"low"}], "pages": [{"id": string, "action": "embed"|"ignore", "headingId": string|null, "name": string|null, "reason": string, "confidence": "high"|"medium"|"low"}]}
+Answer for every block and every page run you were given. This task takes NO "evidence" field and no other extra fields: keep every "reason" to five words at most, so the answer stays short.`;

@@ -68,6 +68,15 @@ export async function loadBlankPackage(): Promise<StoredPdf | null> {
   }
 }
 
+/** A blank draft belongs to one fund: a form built without one must not export with the previous fund's. */
+export async function clearBlankPackage(): Promise<void> {
+  try {
+    await run('readwrite', (s) => s.delete(BLANK_KEY));
+  } catch {
+    /* nothing stored */
+  }
+}
+
 export async function clearPdf(): Promise<void> {
   try {
     await run('readwrite', (s) => s.delete(KEY));

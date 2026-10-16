@@ -90,8 +90,8 @@ describe('behind single sign-on', () => {
     await chatMiddleware(sso)(request('/api/chat/status', 'GET'), anon.res, () => {});
     expect(anon.out.status).toBe(401);
     const who = response();
-    await chatMiddleware(sso)(request('/api/chat/status', 'GET', undefined, { 'x-forwarded-email': 'pat@example.com' }), who.res, () => {});
-    expect(JSON.parse(who.out.chunks.join(''))).toMatchObject({ configured: true, user: 'pat@example.com' });
+    await chatMiddleware(sso)(request('/api/chat/status', 'GET', undefined, { 'x-forwarded-email': 'pat@anduintransact.com' }), who.res, () => {});
+    expect(JSON.parse(who.out.chunks.join(''))).toMatchObject({ configured: true, user: 'pat@anduintransact.com' });
     await wait();
   });
 });

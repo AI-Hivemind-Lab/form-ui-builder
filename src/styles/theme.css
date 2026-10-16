@@ -212,6 +212,24 @@ h1, h2, h3, .toc__title, .drawer__title { letter-spacing: -.015em; }
 .field__badge--bot { background: #f59e0b; right: auto; left: 0; text-transform: none; letter-spacing: 0; font-size: 11px; z-index: 2; }
 .tree__row--botchanged::after { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #f59e0b; flex: none; margin-left: 4px; }
 
+/* ---------- a dialog ---------- */
+.modal { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 20px; background: rgba(16, 24, 40, .45); }
+.modal__box { width: min(520px, 100%); background: #fff; border-radius: 16px; padding: 24px 26px; box-shadow: var(--shadow-lg); color: var(--text); }
+.modal__title { margin: 0 0 8px; font-size: 20px; }
+.modal__box p { margin: 0 0 8px; font-size: 14.5px; line-height: 1.55; color: #475467; }
+.modal__steps { margin: 10px 0 18px; padding-left: 20px; font-size: 14.5px; line-height: 1.6; }
+.modal__actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn--disabled { opacity: .55; pointer-events: none; }
+label.btn { cursor: pointer; }
+.modal__error { padding: 10px 12px; border-radius: 10px; background: #fef3f2; border: 1px solid #fecdca; color: #b42318 !important; font-size: 14px; }
+
+/* top bar: the older zip route, tucked away */
+.menu { position: relative; }
+.menu > summary { list-style: none; cursor: pointer; }
+.menu > summary::-webkit-details-marker { display: none; }
+.menu > summary::after { content: ' ▾'; }
+.menu__panel { position: absolute; right: 0; top: calc(100% + 6px); z-index: 60; display: grid; gap: 6px; min-width: 190px; padding: 8px; background: #fff; border: 1px solid var(--border, #e4e7ec); border-radius: 12px; box-shadow: var(--shadow-lg); }
+
 /* The signed-in user and Sign out (only shown when Google sign-in is on). */
 .account { display: inline-flex; align-items: center; gap: 10px; margin-left: 6px; font-size: 13px; color: var(--muted, #7b8794); }
 .account__email { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

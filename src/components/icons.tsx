@@ -16,6 +16,9 @@ export const UndoIcon = () => (
 export const TrashIcon = () => (
   <svg {...base} width={16} height={16} aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3" /></svg>
 );
+export const CopyIcon = () => (
+  <svg {...base} width={16} height={16} aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V6a2 2 0 0 1 2-2h8" /></svg>
+);
 export const CaretIcon = ({ open }: { open: boolean }) => (
   <svg {...base} width={14} height={14} aria-hidden="true"><path d={open ? 'M6 9l6 6 6-6' : 'M9 6l6 6-6 6'} fill="currentColor" /></svg>
 );

@@ -1,3 +1,4 @@
+import { boxOf } from '../../model/pdfAnchors';
 import { getWidget } from '../../model/schemaWalk';
 import type { SchemaNode } from '../../model/types';
 import type { Standard } from './types';
@@ -21,23 +22,13 @@ export const numberingFromPdf: Standard = {
   source: 'rule',
   apply(ctx) {
     if (!ctx.pdf || ctx.pdf.length === 0) return;
-    const anchorOf = (n: SchemaNode): { page: number; top: number } | null => {
-      const ui = ctx.doc.uiSchema[n.name] ?? {};
-      const aliases: string[] = Array.isArray(ui['ui:pdfMapping']) ? (ui['ui:pdfMapping'] as string[]).slice() : [];
-      const options = (ui['ui:multipleOption'] as { options?: unknown } | undefined)?.options;
-      if (Array.isArray(options)) options.forEach((o) => Array.isArray(o) && aliases.push(...(((o[1] as { pdfMappings?: string[] } | null)?.pdfMappings) ?? [])));
-      const found = aliases.map((a) => ctx.anchors[a]).filter(Boolean);
-      if (found.length === 0) return null;
-      const first = found.reduce((m, a) => (a.page < m.page || (a.page === m.page && a.top < m.top) ? a : m));
-      return { page: first.page, top: first.top };
-    };
     const done: string[] = [];
     walk(ctx.doc.schema.properties, (n) => {
       if (!INPUTS.includes(getWidget(ctx.doc, n))) return;
       const html = ctx.doc.uiSchema[n.name]?.['ui:formattedText'];
       const label = labelOf(ctx.doc, n.name);
       if (typeof html !== 'string' || label === '' || NUMBERED.test(label)) return;
-      const at = anchorOf(n);
+      const at = boxOf(ctx.doc, n, ctx.anchors);
       const lines = at ? ctx.pdf?.find((p) => p.page === at.page)?.lines : undefined;
       if (!at || !lines) return;
       const start = norm(label).slice(0, 18);

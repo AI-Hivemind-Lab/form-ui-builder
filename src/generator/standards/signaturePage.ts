@@ -19,6 +19,7 @@ export const signaturePage: Standard = {
   title: 'No visible Signature page: General Information, or hidden',
   source: 'rule',
   apply(ctx) {
+    let general = nodesOf(ctx.doc, 'Page').some((p) => p.title === GENERAL_INFORMATION);
     for (const page of nodesOf(ctx.doc, 'Page')) {
       const header = (page.properties ?? []).find((c) => getWidget(ctx.doc, c) === 'Header');
       const heading = header ? String(ctx.doc.uiSchema[header.name]?.['ui:heading'] ?? '') : '';
@@ -32,6 +33,12 @@ export const signaturePage: Standard = {
         ctx.log(`signature-page: "${page.title}" holds only signatures, so it is a hidden page (investors sign after they submit the form)`);
         continue;
       }
+      // only one page is the General Information page; a second signature page with fields (the questionnaire's own) is looked at, not renamed
+      if (general) {
+        ctx.warn(`SIGNATURE PAGE: "${page.title}" is a second signature page and still holds ${fillable} field(s): they may repeat the General Information page; check them`);
+        continue;
+      }
+      general = true;
       // the empty group the signer's fields left behind goes
       const clean = (list: SchemaNode[]): SchemaNode[] => list.filter((n) => !isEmptyGroup(ctx, n)).map((n) => (n.properties ? { ...n, properties: clean(n.properties) } : n));
       const rename = (list: SchemaNode[]): SchemaNode[] =>

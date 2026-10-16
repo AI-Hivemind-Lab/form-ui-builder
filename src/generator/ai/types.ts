@@ -50,6 +50,8 @@ export type DecisionData =
   | { kind: 'embedded-pdf'; fileName: string; title: string; start: number; end: number; beforePage: string | null; subtitle: string; /** An agreement to confirm, a consent to give, or nothing (the file only informs). */ confirm?: 'agreement' | 'consent' | null }
   /** Neighbouring elements that belong together, in one group (a section, or what a condition shows). Found by position, built by alias. */
   | { kind: 'group'; name: string; fromAlias: string; toAlias: string; groupKind: 'section' | 'conditional'; /** The element whose answer shows a conditional group: it stays outside. */ controlAlias: string | null; condition: string | null; size: number }
+  /** Text the PDF prints that the form never shows: a paragraph with the words as printed, right after the element above it on the PDF page. */
+  | { kind: 'add-text'; text: string; pdfPage: number; after: string | null; before: string | null; page: string | null }
   /** Fillable fields that leave a full-page PDF page for another page. */
   | { kind: 'move-fields'; aliases: string[]; targetPage: string; wrapperTitle: string };
 

@@ -28,6 +28,11 @@ export function PropertiesDrawer() {
       </button>
       <MetadataForm value={{ node, ui: uiOf(doc, node.name) }} onChange={onChange} isAllowed={(id) => canSwitchTo(doc, node.name, id)} doc={doc} />
       <div className="drawer__actions">
+        {node.name !== 'file0' && (
+          <button type="button" className="btn" onClick={() => dispatch({ type: 'duplicateNode', name: node.name })}>
+            Duplicate field
+          </button>
+        )}
         <button type="button" className="btn btn--danger" onClick={() => dispatch({ type: 'removeNode', name: node.name })}>
           Delete field
         </button>

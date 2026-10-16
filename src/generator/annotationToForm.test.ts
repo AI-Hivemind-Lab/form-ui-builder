@@ -110,12 +110,11 @@ describe('annotationToForm: other annotation shapes', () => {
     expect(ui.parent['ui:required']).toBe('This field is required');
     expect(String(ui.sub['ui:formattedText'])).toContain('*');
   });
-  it('parks objects outside any page in the hidden page, flagged, instead of making a page for them', () => {
-    const pages = (r.form.namespaceFormSchemaMap as { main: { schema: { properties: { name: string; title: string }[] } } }).main.schema.properties;
-    expect(pages.map((p) => p.name)).toEqual(['file0', 'hidden', 'pg']);
-    expect(pages[1].title).toBe('Hidden');
-    expect((r.form.namespaceFormSchemaMap as { main: { uiSchema: Record<string, Record<string, unknown>> } }).main.uiSchema.hidden).toMatchObject({ 'ui:widget': 'Page', 'ui:invisible': true });
-    expect(r.warnings.some((w) => w.startsWith('UNASSIGNED: 1 objects') && w.includes('hidden page'))).toBe(true);
+  it('puts a field the annotation left outside every page into the page before it in the PDF, never into the hidden page, and says so', () => {
+    const pages = (r.form.namespaceFormSchemaMap as { main: { schema: { properties: { name: string; title: string; properties?: { name: string }[] }[] } } }).main.schema.properties;
+    expect(pages.map((p) => p.name)).toEqual(['file0', 'pg']);
+    expect(pages[1].properties?.map((n) => n.name)).toContain('stray');
+    expect(r.log.some((l) => l.startsWith('structure:') && l.includes('stray'))).toBe(true);
   });
   it('maps every annotated field, checkboxes included', () => {
     expect(r.stats.unmappedFields).toEqual([]);
@@ -308,7 +307,7 @@ describe('annotationToForm: address block layout', () => {
   });
 });
 
-describe('annotationToForm: Client A review rules', () => {
+describe('annotationToForm: review rules, batch 1', () => {
   const field = (id: string, text: string, top: number, name = id): Obj[] => [{ id, __typename__: 'PdfTextFieldDTO', name, ...box(top, 0.4) }, ...label(id, text)];
   const r = build([
     { id: 'pg', __typename__: 'PdfPageFieldDTO', name: 'pg', children: ['q', 'res', 'cc', 'q2', 'plain'] },
@@ -513,5 +512,22 @@ describe('annotationToForm: page order and titles of embedded-file pages', () =>
       { id: 'paragraph', __typename__: 'PdfParagraphFieldDTO', name: 'paragraph', children: [], content: [1, 'Schedule C Investor Information'], ...box(0.1, 0.3, 3) },
       { id: 't', __typename__: 'PdfTextFieldDTO', name: 't', ...box(0.5, 0.2, 3) }, ...label('t', 'Name')]);
     expect(pages(title)[0].title).toBe('Schedule C Investor Information');
+  });
+});
+
+describe('annotationToForm: a choice that not every investor can make is optional', () => {
+  const choice = (text: string) => {
+    const r = build([
+      { id: 'pg', __typename__: 'PdfPageFieldDTO', name: 'pg', children: ['g'] }, ...label('pg', 'Page'),
+      { id: 'g', __typename__: 'PdfRadioGroupFieldDTO', name: 'q', children: ['a', 'b'] }, ...label('g', text),
+      { id: 'a', __typename__: 'PdfRadioFieldDTO', name: 'one', ...box(0.3, 0.1) }, ...label('a', 'BHC Partner'),
+      { id: 'b', __typename__: 'PdfRadioFieldDTO', name: 'two', ...box(0.3, 0.4) }, ...label('b', 'ERISA Partner'),
+    ]);
+    return uiOf(r).q['ui:required'];
+  };
+  it('"check the appropriate box if the Investor elects ..." and "(Select as Appropriate)" are not required; a plain question is', () => {
+    expect(choice('4. Please check the appropriate box if the Investor elects to be treated as a BHC Partner:')).toBeUndefined();
+    expect(choice('(Select as Appropriate)')).toBeUndefined();
+    expect(choice('Is the Investor a BHC Partner?')).toBe('This field is required');
   });
 });

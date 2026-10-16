@@ -1,4 +1,4 @@
-import { aliasesOf } from '../../model/pdfAnchors';
+import { anchorsFor } from '../../model/pdfAnchors';
 import type { Anchors } from '../../model/pdfStore';
 import { belowMap } from '../../model/fieldsBelow';
 import { getWidget, isInvisible } from '../../model/schemaWalk';
@@ -60,7 +60,7 @@ export function groupPageFacts(doc: FormDoc, anchors: Anchors, pdf: PageText[] |
       const onPages = new Set<number>();
       list.forEach((n) => {
         const walk = (x: SchemaNode): void => {
-          aliasesOf(doc, x).forEach((a) => anchors[a] && onPages.add(anchors[a].page + 1));
+          anchorsFor(doc, x, anchors).forEach((a) => onPages.add(a.page + 1));
           (x.properties ?? []).forEach(walk);
         };
         walk(n);

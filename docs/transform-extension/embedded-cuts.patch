@@ -1,0 +1,40 @@
+--- a/sandbox.js
++++ b/sandbox.js
+@@ -59,6 +59,8 @@
+         }
+         transformedData.formData.form.namespaceFormSchemaMap[defaultNs].schema = appliedTransform.form.namespaceFormSchemaMap[defaultNs].schema
+         transformedData.formData.form.namespaceFormSchemaMap[defaultNs].uiSchema = appliedTransform.form.namespaceFormSchemaMap[defaultNs].uiSchema
++        // UI Builder also lists the embedded PDFs it wants cut from the source PDF; they are made just before the save
++        if (Array.isArray(appliedTransform.embeddedCuts)) transformedData.embeddedCuts = appliedTransform.embeddedCuts
+ 
+     } catch (e) {
+         transformedData = { error: e.message };
+--- a/js/modes/fullTransformMode.js
++++ b/js/modes/fullTransformMode.js
+@@ -2,7 +2,8 @@
+  * Full Transform Mode Handler
+  */
+ 
+-import { getAuthToken, getSessionId, fetchFormData, saveForm } from '../api/formApi.js';
++import { getAuthToken, getSessionId, fetchFormData, saveForm, getFullAPIURL } from '../api/formApi.js';
++import { apiCaller, applyEmbeddedCuts } from '../api/cutApi.js';
+ import { setStatus, mapFormDataToSaveForm, defaultFunctionContent } from '../utils/helpers.js';
+ 
+ /**
+@@ -29,12 +30,15 @@
+             if (!authToken) throw new Error('Auth token not found');
+             const sessionId = await getSessionId(tabId);
+ 
++            // embedded PDFs asked for by the function are cut from the form's PDF first (nothing is made when there are none)
++            const { made, kept } = await applyEmbeddedCuts(transformed, apiCaller(getFullAPIURL, hostName, authToken), (m) => setStatus(statusDiv, m, 'info'));
++
+             const saveFormPayload = mapFormDataToSaveForm(transformed, sessionId);
+             console.log("mapped payload: ", saveFormPayload);
+ 
+             await saveForm(hostName, authToken, saveFormPayload);
+ 
+-            setStatus(statusDiv, 'Transformation successful! Data saved.', 'success');
++            setStatus(statusDiv, 'Transformation successful! Data saved.' + (made + kept > 0 ? ` Embedded PDFs: ${made} cut, ${kept} already there.` : ''), 'success');
+         } catch (err) {
+             setStatus(statusDiv, 'Error: ' + err.message, 'error');
+         }

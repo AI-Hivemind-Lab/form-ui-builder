@@ -1,3 +1,4 @@
+import { duplicateNode } from '../model/duplicate';
 import { diffDocs, revertChange, type Change } from '../chat/changes';
 import { collectDefaults } from '../model/defaults';
 import { applyDecisions } from '../generator/ai/apply';
@@ -56,6 +57,7 @@ export type Action =
   | { type: 'select'; name: string | null }
   | { type: 'startAdd'; widget: string; anchor?: string }
   | { type: 'removeNode'; name: string }
+  | { type: 'duplicateNode'; name: string }
   | { type: 'moveNode'; name: string; parent: string | null; index: number }
   | { type: 'undo' }
   | { type: 'cancelAdd' }
@@ -189,6 +191,11 @@ export function formReducer(state: FormState, action: Action): FormState {
         ...settle({ ...state, doc: removeNode(state.doc, action.name), past: pushPast(state), adding: null }),
         notice: `Deleted “${node.title}”${count > 0 ? ` and ${count} field${count === 1 ? '' : 's'} inside it` : ''}`,
       };
+    }
+    case 'duplicateNode': {
+      const made = duplicateNode(state.doc, action.name);
+      if (!made) return { ...state, notice: 'This field cannot be duplicated' };
+      return { ...settle({ ...state, doc: made.doc, past: pushPast(state), selection: made.name, adding: null }), notice: `Duplicated “${findNode(state.doc.schema.properties, action.name)?.title ?? action.name}”: the copy is right below it, without its PDF mappings` };
     }
     case 'moveNode': {
       try {

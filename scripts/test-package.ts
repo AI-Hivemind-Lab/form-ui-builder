@@ -15,7 +15,7 @@ if (!blank || !real || !out) {
 }
 const read = (dir: string, f: string) => JSON.parse(readFileSync(join(dir, f), 'utf8'));
 
-const EMBEDDED = 'Example Fund LP - Annex 2.pdf';
+const EMBEDDED = 'Example Music Fund LP - Annex 2.pdf';
 const START = 64;
 const END = 64;
 
@@ -36,7 +36,7 @@ main.schema.properties.push({ name: 'test_page', type: 'object', title: 'Test em
 ] });
 Object.assign(main.uiSchema, {
   test_page: { 'ui:widget': 'Page', 'ui:marginBottom': '12px' },
-  test_header: { 'ui:widget': 'Header', 'ui:formattedText': 'Header', 'ui:heading': 'Test embedded PDF', 'ui:marginBottom': '12px', 'ui:subtitle': 'Example Fund LP' },
+  test_header: { 'ui:widget': 'Header', 'ui:formattedText': 'Header', 'ui:heading': 'Test embedded PDF', 'ui:marginBottom': '12px', 'ui:subtitle': 'Example Music Fund LP' },
   test_pdf: { 'ui:widget': 'Pdf', 'ui:formattedText': 'Pdf', 'ui:embeddedPdf': EMBEDDED, 'ui:height': '600pt', 'ui:enabledComment': true, 'ui:marginBottom': '12px' },
 });
 pkg.embeddedPdf.push([EMBEDDED, fileId]);
@@ -59,7 +59,7 @@ const write = (f: string, v: unknown) => writeFileSync(join(out, f), JSON.string
 write('form_data.json', pkg);
 write('record_data.json', record);
 write('form_metadata.json', meta);
-['form_integration_config.json', 'annotation_document_data.json', 'textract_annotation_target.json', 'sample-fund.pdf'].forEach((f) => copyFileSync(join(blank, f), join(out, f)));
+['form_integration_config.json', 'annotation_document_data.json', 'textract_annotation_target.json', 'sub-doc.pdf'].forEach((f) => copyFileSync(join(blank, f), join(out, f)));
 const staticPdf = Object.values(record.rData as Record<string, { fileName?: string }>).map((r) => r.fileName).find((n) => n && /2\.pdf$/.test(n));
 if (staticPdf) copyFileSync(existsSync(join(blank, staticPdf)) ? join(blank, staticPdf) : join(real, staticPdf), join(out, staticPdf)); // the real draft has the same file
 copyFileSync(join(real, EMBEDDED), join(out, EMBEDDED));
