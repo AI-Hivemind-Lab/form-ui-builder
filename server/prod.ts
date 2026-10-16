@@ -3,10 +3,19 @@
 import { readFile } from 'node:fs/promises';
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import { extname, join, normalize, sep } from 'node:path';
+import { authConfigProblem, authEnabled, authMiddleware, USER_HEADER, type AuthEnv } from './auth';
 import { chatMiddleware, type ChatEnv } from './chatProxy';
 import { llmMiddleware } from './llmProxy';
 
-const env = process.env as ChatEnv & { PORT?: string };
+const raw = process.env as ChatEnv & AuthEnv & { PORT?: string };
+// With Google sign-in on, the gate stamps the verified email into USER_HEADER and the AI endpoints read the user from it.
+const env: ChatEnv & { PORT?: string } = authEnabled(raw) ? { ...raw, AUTH_HEADER: USER_HEADER } : raw;
+const authProblem = authConfigProblem(raw);
+if (authProblem) {
+  console.error(`Sign-in: ${authProblem}`);
+  if ((raw.SESSION_SECRET ?? '').length < 32) process.exit(1); // an unsigned session would be forgeable; a missing allowlist only locks everyone out
+}
+const gate = authMiddleware(raw);
 const root = join(process.cwd(), 'dist');
 const port = Number(env.PORT ?? 3000);
 const chat = chatMiddleware(env);
@@ -44,14 +53,17 @@ async function serve(req: IncomingMessage, res: ServerResponse): Promise<void> {
 }
 
 const server = createServer((req, res) => {
-  const api = (req.url ?? '').startsWith('/api/');
-  // Behind single sign-on, the AI endpoints need the signed-in user's header. The app must only be reachable through the sign-in proxy,
-  // which sets that header itself: a request that skips the proxy could send any value.
-  if (api && env.AUTH_HEADER && !String(req.headers[env.AUTH_HEADER.toLowerCase()] ?? '').trim()) {
-    res.statusCode = 401;
-    res.setHeader('content-type', 'application/json');
-    return void res.end(JSON.stringify({ error: 'Sign in first.' }));
-  }
-  chat(req as never, res as never, () => llm(req as never, res as never, () => void serve(req, res)));
+  // Google sign-in (when on) answers /login and /api/auth/* itself and lets only signed-in requests through, with the user header stamped.
+  void gate(req as never, res as never, () => {
+    const api = (req.url ?? '').startsWith('/api/');
+    // Behind single sign-on, the AI endpoints need the signed-in user's header. The app must only be reachable through the sign-in proxy,
+    // which sets that header itself: a request that skips the proxy could send any value.
+    if (api && env.AUTH_HEADER && !String(req.headers[env.AUTH_HEADER.toLowerCase()] ?? '').trim()) {
+      res.statusCode = 401;
+      res.setHeader('content-type', 'application/json');
+      return void res.end(JSON.stringify({ error: 'Sign in first.' }));
+    }
+    chat(req as never, res as never, () => llm(req as never, res as never, () => void serve(req, res)));
+  });
 });
 server.listen(port, () => console.log(`UI Builder on http://localhost:${port}${env.AUTH_HEADER ? ` (sign-in header: ${env.AUTH_HEADER})` : ''}`));

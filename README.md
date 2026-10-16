@@ -49,4 +49,10 @@ The model is reached through the server (`/api/chat`, streamed); the key never r
 
 `Dockerfile` builds the app and runs `server/prod.ts` (the app plus `/api/llm` and `/api/chat`). Settings are environment variables (see `.env.example`): `LITELLM_BASE_URL`, `LITELLM_API_KEY`, `JUDGE_MODEL` (and optionally `CHAT_MODEL`, `CHAT_REASONING_EFFORT`).
 
+### Google sign-in (for a public address)
+
+Set `GOOGLE_CLIENT_ID`, `ALLOWED_DOMAINS` (and/or `ALLOWED_EMAILS`) and `SESSION_SECRET` (32+ random characters) and the whole site asks for a Google sign-in first. The server verifies Google's ID token, checks the email against the allowlist, and keeps you signed in with a signed, HttpOnly cookie (`SESSION_HOURS`, default 12). Everything except `/login` and `/api/auth/*` needs that cookie, including the AI endpoints, and the allowlist is re-checked on every request. Leave `GOOGLE_CLIENT_ID` unset and nothing changes: the site is open.
+
+In Google Cloud, create a "Web application" OAuth client and add the site's address (for example `https://uibuilder.example.com`) under Authorized JavaScript origins. There is no client secret to store. Use this together with the AI settings if you put the model key on a public address, so only the allowed accounts can spend it.
+
 Single sign-on: put the app behind the sign-in proxy (Dokploy's forward auth in front of Anduin SSO) and set `AUTH_HEADER` to the header the proxy passes the signed-in user's email in (for example `X-Forwarded-Email`). Every `/api` request without it is refused. Only expose the app through that proxy: a request that skips it could send any header value.
