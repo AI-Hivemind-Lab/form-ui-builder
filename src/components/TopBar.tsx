@@ -6,6 +6,7 @@ import { cutPdfPages, readZip, writeZip } from '../model/zip';
 import { parseFormJson } from '../model/loadForm';
 import { claimForm } from '../model/persist';
 import { useForm } from '../state/useFormStore';
+import { AccountMenu } from './AccountMenu';
 import { InertButton } from './Inert';
 import { Logo } from './Logo';
 
@@ -95,6 +96,7 @@ export function TopBar() {
         <InertButton className="btn" label="Save and close">
           Save and close
         </InertButton>
+        <AccountMenu />
       </div>
     </header>
   );

@@ -211,3 +211,7 @@ h1, h2, h3, .toc__title, .drawer__title { letter-spacing: -.015em; }
 .field--botchanged { outline: 2px solid #f59e0b; outline-offset: 5px; background: rgba(245, 158, 11, .05); border-radius: 6px; }
 .field__badge--bot { background: #f59e0b; right: auto; left: 0; text-transform: none; letter-spacing: 0; font-size: 11px; z-index: 2; }
 .tree__row--botchanged::after { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #f59e0b; flex: none; margin-left: 4px; }
+
+/* The signed-in user and Sign out (only shown when Google sign-in is on). */
+.account { display: inline-flex; align-items: center; gap: 10px; margin-left: 6px; font-size: 13px; color: var(--muted, #7b8794); }
+.account__email { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

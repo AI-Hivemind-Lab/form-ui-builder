@@ -124,3 +124,6 @@
 @media (prefers-reduced-motion: reduce) {
   .abtn__tile, .runbtn__arrow { transition: none; }
 }
+
+.landing__navright { display: inline-flex; align-items: center; gap: 14px; }
+.landing__nav .account { margin-left: 0; color: rgba(255, 255, 255, .85); }

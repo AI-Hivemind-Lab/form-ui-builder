@@ -11,6 +11,7 @@ import { loadForm, parseFormJson } from './model/loadForm';
 import { claimForm, clearProposalSet, saveDoc, saveIgnored, saveProposalSet } from './model/persist';
 import { clearPdf, saveAnchors, savePdf, type Anchors } from './model/pdfStore';
 import type { FormDoc } from './model/types';
+import { AccountMenu } from './components/AccountMenu';
 import { AnduinMark } from './components/Logo';
 
 export const FORM_HASH = '#/form';
@@ -179,7 +180,10 @@ export function Landing() {
         <div className="landing__arc landing__arc--c" aria-hidden="true" />
         <header className="landing__nav">
           <span className="landing__brand"><AnduinMark height={30} /><span className="landing__wordmark">UI Builder</span></span>
-          <button type="button" className="landing__navlink" onClick={() => formFileRef.current?.click()}>Open an existing form <span aria-hidden="true">›</span></button>
+          <span className="landing__navright">
+            <button type="button" className="landing__navlink" onClick={() => formFileRef.current?.click()}>Open an existing form <span aria-hidden="true">›</span></button>
+            <AccountMenu buttonClassName="landing__navlink" />
+          </span>
         </header>
 
         <div className="landing__hero">
