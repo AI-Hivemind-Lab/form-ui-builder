@@ -11,10 +11,9 @@ npm test         # unit tests for the pure model/ + reducer
 npm run build    # typecheck + production build
 ```
 
-- Default form: `src/data/demo-form.json` (LP Interest Transfer demo). Use **Load form JSON** (top bar) to render any other export; only `namespaceFormSchemaMap[defaultNamespace]` is read.
+- Use **Load form JSON** (top bar) to render any other export; only `namespaceFormSchemaMap[defaultNamespace]` is read.
 - Working: fill the form; click a field to edit all of its metadata (Properties panel); the **+** next to "Table of Contents" opens the widget picker, and picking one opens an Add field form (name, location, every known `ui:` key, plus custom `ui:` keys); all 27 Anduin widgets (Signature, Pdf/Word, FileGroup and a nested File are placeholders; Repeatable has real rows up to `ui:maxItems`); fields below an option (Radio / MultipleCheckbox, set in the options list of the Properties panel, shown under their option; a field belongs to one parent option); footnote tooltips; "Show invisible pages & fields"; **Export form JSON** (the loaded file with only `schema` and `uiSchema` replaced; rules/libs carry through).
 - The right column holds the "Show invisible pages & fields" toggle (working) and "Show alias" (inert, "Not in prototype") until you select a field or add one.
-- Not implemented: rules, PDF generation, signatures, commenting, persistence, deleting/reordering fields, nested Repeatables, undo.
 - Specs: `docs/superpowers/specs/2026-10-09-form-builder-prototype-design.md`, `docs/superpowers/specs/2026-10-09-add-fields-and-widgets-design.md`
 
 
