@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState, type ChangeEvent, type DragEvent, type ReactNode } from 'react';
 import { aiConfigured, makeAsk } from './generator/ai/client';
+import { findMissingContent } from './generator/ai/coverage';
+import { planStructure } from './generator/ai/structure';
 import { judgeForm } from './generator/ai/tasks';
 import { titleWordsFrom } from './generator/ai/titleWords';
 import { buildEmbeddedPages, type ProposalSet } from './generator/ai/proposals';
@@ -9,7 +11,7 @@ import { pageOrderWarnings } from './generator/pageOrder';
 import { STANDARDS } from './generator/standards';
 import { loadForm, parseFormJson } from './model/loadForm';
 import { claimForm, clearProposalSet, saveDoc, saveIgnored, saveProposalSet } from './model/persist';
-import { clearPdf, saveAnchors, savePdf, type Anchors } from './model/pdfStore';
+import { clearBlankPackage, clearPdf, saveAnchors, savePdf, type Anchors } from './model/pdfStore';
 import type { FormDoc } from './model/types';
 import { AccountMenu } from './components/AccountMenu';
 import { AnduinMark } from './components/Logo';
@@ -24,8 +26,8 @@ const PdfIcon = () => <Svg><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 
 const CheckIcon = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>;
 
 /** A file slot: click it or drop a file on it. The chosen file's name replaces the prompt. */
-function DropSlot({ step, title, prompt, icon, accept, file, disabled, label, onFile }: {
-  step: number; title: string; prompt: string; icon: ReactNode; accept: string; file: File | null; disabled: boolean; label: string; onFile: (f: File | null) => void;
+function DropSlot({ step, title, prompt, icon, accept, file, disabled, label, onFile, wide = false, optional = false }: {
+  step: number; wide?: boolean; optional?: boolean; title: string; prompt: string; icon: ReactNode; accept: string; file: File | null; disabled: boolean; label: string; onFile: (f: File | null) => void;
 }) {
   const input = useRef<HTMLInputElement>(null);
   const [over, setOver] = useState(false);
@@ -38,14 +40,14 @@ function DropSlot({ step, title, prompt, icon, accept, file, disabled, label, on
   };
   return (
     <div
-      className={`drop${file ? ' drop--done' : ''}${over ? ' drop--over' : ''}${disabled ? ' drop--disabled' : ''}`}
+      className={`drop${wide ? ' drop--wide' : ''}${file ? ' drop--done' : ''}${over ? ' drop--over' : ''}${disabled ? ' drop--disabled' : ''}`}
       onDragOver={(e) => { e.preventDefault(); if (!disabled) setOver(true); }}
       onDragLeave={() => setOver(false)}
       onDrop={drop}
     >
       <button type="button" className="drop__btn" disabled={disabled} onClick={() => input.current?.click()}>
         <span className="drop__icon">{file ? <CheckIcon /> : icon}</span>
-        <span className="drop__step">Step {step}</span>
+        <span className="drop__step">Step {step}{optional ? ' · optional' : ''}</span>
         <span className="drop__title">{title}</span>
         <span className="drop__file">{file ? file.name : prompt}</span>
         <span className="drop__action">{file ? 'Change file' : 'Choose or drop a file'}</span>
@@ -96,6 +98,7 @@ export function Landing() {
     else clearProposalSet();
     if (pdfFile) await savePdf(pdfFile);
     else await clearPdf(); // the previous form's PDF does not belong to this one
+    await clearBlankPackage(); // nor does its blank draft (the editor asks for one only when a zip package is exported)
     const tab = window.open(`${location.pathname}${FORM_HASH}`, '_blank');
     setBlocked(tab === null);
     setMessage({ kind: 'ok', text: okText });
@@ -134,11 +137,27 @@ export function Landing() {
       setWorking('Reading the PDF text…');
       const pages = await extractPdfText(pdfFile).catch(() => null);
       setWorking('Building the form…');
-      const result = buildForm(text, { fundName, disabledStandards: disabled, pdfPages: pages });
+      let result = buildForm(text, { fundName, disabledStandards: disabled, pdfPages: pages });
+      if (useAi && ai.configured) {
+        // The AI settles what the program could only guess from the PDF's headings: where the objects the annotation left outside
+        // every page go, and what the pages without a highlighted title are called. Then the form is built again with its answer.
+        try {
+          const plan = await planStructure(result.structure, makeAsk(), setWorking);
+          if (plan) result = buildForm(text, { fundName, disabledStandards: disabled, pdfPages: pages, plan });
+        } catch (err) {
+          result = { ...result, warnings: [...result.warnings, `STRUCTURE: the AI could not read the structure of the PDF (${err instanceof Error ? err.message : 'failed'}); the program's reading of its headings was used`] };
+        }
+        setWorking('Building the form…');
+      }
       setWarnings(result.warnings);
       setChanges(result.changes);
       const doc = loadForm(result.form);
-      const okText = `Built a form from “${annotationFile.name}”: ${result.stats.nodes} elements`;
+      const loose = result.structure.runs;
+      const placed = loose.filter((r) => r.action.kind !== 'hidden').reduce((n, r) => n + r.count, 0);
+      const parked = loose.filter((r) => r.action.kind === 'hidden').reduce((n, r) => n + r.count, 0);
+      const aliasTitled = result.structure.pages.filter((p) => p.source === 'alias').length;
+      const structure = `${loose.length > 0 ? ` ${placed} object${placed === 1 ? '' : 's'} the annotation left outside every page ${placed === 1 ? 'was' : 'were'} put on pages by the PDF's headings${parked > 0 ? ` (${parked} signature object${parked === 1 ? '' : 's'} stay${parked === 1 ? 's' : ''} in the hidden page)` : ''}.` : ''}${aliasTitled > 0 ? ` ${aliasTitled} page${aliasTitled === 1 ? ' has' : 's have'} a title made from the alias: check ${aliasTitled === 1 ? 'it' : 'them'}.` : ''}`;
+      const okText = `Built a form from “${annotationFile.name}”: ${result.stats.nodes} elements.${structure}`;
       if (useAi && ai.configured) {
         // The AI reviews the form and proposes changes; nothing is applied until the user accepts them, in the form.
         const judged = await judgeForm(
@@ -154,13 +173,30 @@ export function Landing() {
         const built = settled.doc;
         // the pages the AI added are placed too: say if any page is out of the sub-doc's order
         setWarnings((w) => [...w.filter((x) => !x.startsWith('PAGE ORDER')), ...pageOrderWarnings(built, result.anchors)]);
-        const proposed = settled.set.decisions;
+        // Last, a look at what the PDF prints and the form never shows (a note nobody highlighted, a section nobody annotated)
+        let proposed = settled.set.decisions;
+        let missingText = '';
+        const notes = [...judged.notes];
+        if (pages && pages.length > 0) {
+          try {
+            const missing = await findMissingContent({ doc: built, anchors: result.anchors, pages, fundName, texts: result.texts }, makeAsk(), setWorking);
+            proposed = [...proposed, ...missing.decisions];
+            notes.push(...missing.notes);
+            const added = missing.decisions.filter((d) => d.data.kind === 'add-text').length;
+            const pagesLeft = missing.decisions.filter((d) => d.data.kind === 'embedded-pdf').length;
+            if (missing.found.uncovered > 0) missingText = ` ${missing.found.uncovered} of ${missing.found.checked} lines of the PDF are not on the form${added + pagesLeft > 0 ? `: ${added} text${added === 1 ? '' : 's'} and ${pagesLeft} page range${pagesLeft === 1 ? '' : 's'} are proposed` : ' (all left out on purpose)'}.`;
+            setWorking(null);
+          } catch (err) {
+            setWorking(null);
+            notes.push(`Content not on the form: the check failed (${err instanceof Error ? err.message : 'failed'}); nothing was added.`);
+          }
+        }
         const pdfPages = { length: settled.pages };
         const count = proposed.length;
         const investor = proposed.some((d) => d.data.kind === 'investor-type') ? ' The investor type question is proposed.' : '';
         const embedded = pdfPages.length > 0 ? ` ${pdfPages.length} embedded PDF page${pdfPages.length === 1 ? ' was' : 's were'} built as page${pdfPages.length === 1 ? '' : 's'} of their own: check them and delete any you do not want.` : '';
         const grouped = settled.groups > 0 ? ` ${settled.groups} group${settled.groups === 1 ? ' was' : 's were'} built to organise the pages: check the table of contents.` : '';
-        await open(built, `${okText}.${embedded}${grouped} ${count === 0 ? 'The AI has no proposals' : `${count} AI proposal${count === 1 ? '' : 's'} wait in the form, on the fields they are about.`}${investor}`, result.anchors, { decisions: proposed, notes: judged.notes, texts: result.texts });
+        await open(built, `${okText}${embedded}${grouped}${missingText} ${count === 0 ? 'The AI has no proposals' : `${count} AI proposal${count === 1 ? '' : 's'} wait in the form, on the fields they are about.`}${investor}`, result.anchors, { decisions: proposed, notes, texts: result.texts });
         return;
       }
       setWorking(null);
@@ -197,7 +233,7 @@ export function Landing() {
           <div className="landing__cardhead">
             <span className="label">Build a form</span>
             <h2>Annotation and PDF in, smart form out</h2>
-            <p>Both files are needed. Nothing starts until you press Run.</p>
+            <p>That is all this needs. The form goes back into Form Builder with transFORM, so nothing is imported or uploaded twice. Nothing starts until you press Run.</p>
           </div>
           <section className="landing__panel" aria-label="Build a form">
             <div className="drops">
@@ -270,12 +306,12 @@ export function Landing() {
       <section className="landing__how" aria-label="How it works">
         <div className="landing__how-inner">
           <span className="label">How it works</span>
-          <h2>From a highlighted PDF to a form ready for Form Builder.</h2>
+          <h2>From a highlighted PDF to a form saved in Form Builder.</h2>
           <div className="landing__steps">
-            <div className="step"><span className="step__n">01</span><strong>Annotate</strong><p>Highlight fields and text on the sub-doc PDF.</p></div>
-            <div className="step"><span className="step__n">02</span><strong>Build</strong><p>Standards turn the annotation into a smart form.</p></div>
+            <div className="step"><span className="step__n">01</span><strong>Prepare</strong><p>In Form Builder, make a blank form and add the annotated PDF. That stays the form's only copy of the PDF.</p></div>
+            <div className="step"><span className="step__n">02</span><strong>Build</strong><p>Drop the annotation and the PDF here. Standards turn them into a smart form.</p></div>
             <div className="step"><span className="step__n">03</span><strong>Review</strong><p>Accept AI proposals while you scroll the form.</p></div>
-            <div className="step"><span className="step__n">04</span><strong>Export</strong><p>Download the form JSON, or a package for Form Builder.</p></div>
+            <div className="step"><span className="step__n">04</span><strong>Apply</strong><p>Copy for transFORM, paste it in the extension with the form open for editing. No import, no second PDF.</p></div>
           </div>
         </div>
       </section>

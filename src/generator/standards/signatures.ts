@@ -1,3 +1,4 @@
+import { primaryBox } from '../../model/pdfAnchors';
 import { getWidget } from '../../model/schemaWalk';
 import { removeNode } from '../../model/tree';
 import type { SchemaNode } from '../../model/types';
@@ -19,8 +20,7 @@ const mappingsOf = (ctx: StandardContext, sig: string): Mapping[] => {
 /** The signature widgets with where they sit on the PDF. */
 const signaturesWithPosition = (ctx: StandardContext): { node: SchemaNode; page: number; top: number }[] =>
   nodesOf(ctx.doc, 'Signature').flatMap((node) => {
-    const alias = firstAlias(ctx.doc, node.name);
-    const a = alias ? ctx.anchors[alias] : undefined;
+    const a = primaryBox(ctx.doc, node, ctx.anchors);
     return a ? [{ node, page: a.page, top: a.top }] : [];
   });
 
@@ -30,16 +30,16 @@ export const gpFilledFields: Standard = {
   title: 'GP-filled fields go into the GP signature',
   source: 'rule',
   apply(ctx) {
-    const targets: { name: string; alias: string; label: string }[] = [];
+    const targets: { name: string; node: SchemaNode; alias: string; label: string }[] = [];
     walk(ctx.doc.schema.properties, (n) => {
       const w = getWidget(ctx.doc, n);
       const label = labelOf(ctx.doc, n.name);
       if (w === 'Signature' || !/accepted\s+(capital\s+)?(commitment|amount)/i.test(label)) return;
       const alias = firstAlias(ctx.doc, n.name);
-      if (alias) targets.push({ name: n.name, alias, label });
+      if (alias) targets.push({ name: n.name, node: n, alias, label });
     });
     for (const t of targets) {
-      const at = ctx.anchors[t.alias];
+      const at = primaryBox(ctx.doc, t.node, ctx.anchors);
       const sig = at ? signaturesWithPosition(ctx).filter((s) => s.page === at.page && s.top >= at.top - 0.01).sort((a, b) => a.top - b.top)[0] : undefined;
       if (!sig) {
         ctx.warn(`GP FIELD: ${t.name} ("${t.label}") is filled by the General Partner but no signature follows it on its PDF page; it was left where it is`);
@@ -82,7 +82,7 @@ export const signatureFields: Standard = {
       if (w === 'Signature' || !['TextBox', 'Date', 'TextArea'].includes(w)) return;
       const alias = firstAlias(ctx.doc, n.name);
       const kind = alias ? SIGNER_FIELD.find((k) => k.alias.test(alias)) : undefined;
-      const a = alias ? ctx.anchors[alias] : undefined;
+      const a = primaryBox(ctx.doc, n, ctx.anchors);
       if (!alias || !kind || !a) return;
       // The signature whose block this field belongs to: the one the alias names (signername_indi_x goes with signature_indi_x,
       // wherever the printed name sits), else the first one below it on the same PDF page.

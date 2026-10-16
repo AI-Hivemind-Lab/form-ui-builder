@@ -19,7 +19,7 @@ const run = (doc: ReturnType<typeof raw>, anchors: StandardContext['anchors'] = 
   const changes: string[] = [];
   const warns: string[] = [];
   const ctx: StandardContext = { doc, anchors, texts, log: (m) => changes.push(m), warn: (m) => warns.push(m) };
-  runStandards(ctx, ids ? ['hidden-page', 'tax-forms', 'gp-filled-fields', 'signature-fields', 'signature-groups', 'option-layouts', 'title-case'].filter((x) => !ids.includes(x)) : []);
+  runStandards(ctx, ids ? ['hidden-page', 'tax-forms', 'gp-filled-fields', 'signature-fields', 'signature-groups', 'option-layouts', 'title-case', 'empty-pages', 'duplicate-paragraphs'].filter((x) => !ids.includes(x)) : []);
   return { doc: ctx.doc, changes, warns };
 };
 const box = (page: number, top: number) => ({ page, left: 0.1, top, right: 0.5, bottom: top + 0.02 });
@@ -582,7 +582,7 @@ describe('tax id label', () => {
 
 const STANDARDS_OFF_EXCEPT = (id: string): string[] => STANDARDS.map((x) => x.id).filter((x) => x !== id);
 
-describe('Client A batch 2', () => {
+describe('review rules, batch 2', () => {
   const opt = (v: string, label: string) => [v, { formattedText: label === '' ? '' : `<p>${label}</p>`, blueprintMetadataMapping: '' }];
 
   it('labels unlabelled Yes / No options from their aliases', () => {
@@ -875,7 +875,7 @@ describe('messages that depend on an answer are Info wells', () => {
 
 describe('agreements: only the documents the investor agrees to, and signing is said', () => {
   const pdf = (n: string, file: string) => ({ 'ui:widget': 'Pdf', 'ui:embeddedPdf': file, 'ui:height': '600pt' });
-  const fund = 'Example Fund II, L.P. Form of Subscription Agreement (Canadian Investors)';
+  const fund = 'Example Canada Fund II, L.P. Form of Subscription Agreement (Canadian Investors)';
   const nodes = [
     { name: 'ins', type: 'object', title: 'Instructions', properties: [{ name: 'ins_pdf', type: 'null', title: `${fund} - Instructions.pdf` }] },
     { name: 'sa', type: 'object', title: 'Subscription Agreement', properties: [{ name: 'sa_pdf', type: 'null', title: `${fund} - Subscription Agreement.pdf` }] },
@@ -996,5 +996,86 @@ describe('statements the PDF asks the investor to initial', () => {
     const ctx: StandardContext = { doc: raw([{ name: 'pg', type: 'object', title: 'P', properties: [{ name: 't', type: 'string', title: 'T' }] }], { pg: { 'ui:widget': 'Page' }, t: box('t') }), anchors: {}, texts: [], log: () => {}, warn: () => {} };
     initialSelections.apply(ctx);
     expect(ctx.doc.uiSchema.initials).toBeUndefined();
+  });
+});
+
+import { optionLabelsFromPdf } from './optionLabels';
+
+describe('options the annotation did not highlight take the words printed beside their box', () => {
+  const seg = (left: number, right: number, text: string) => ({ left, right, text });
+  const line = (top: number, ...segments: ReturnType<typeof seg>[]) => ({ top, text: segments.map((x) => x.text).join(' '), segments });
+  const pdf = [{ page: 0, text: '', lines: [
+    line(0.30, seg(0.07, 0.10, '□'), seg(0.12, 0.20, '(i)'), seg(0.23, 0.80, 'A company, partnership or trust that owns not less than $5,000,000')),
+    line(0.315, seg(0.23, 0.70, 'in investments, and is not formed for the specific purpose.')),
+    line(0.35, seg(0.07, 0.10, '□'), seg(0.12, 0.60, 'A natural person')),
+    line(0.55, seg(0.12, 0.20, '□ Yes'), seg(0.30, 0.40, '□ No')),
+  ] }];
+  const at = (left: number, top: number) => ({ page: 0, left, top, right: left + 0.03, bottom: top + 0.02 });
+  const anchors = { a: at(0.07, 0.29), b: at(0.07, 0.34), c: at(0.12, 0.54), d: at(0.30, 0.54) };
+  const empty = (alias: string) => [alias, { formattedText: '', blueprintMetadataMapping: '', pdfMappings: [alias] }];
+  const make = () => raw(
+    [{ name: 'pg', type: 'object', title: 'P', properties: [{ name: 'q1', type: 'array', title: 'q1' }, { name: 'q2', type: 'string', title: 'q2' }] }],
+    { pg: { 'ui:widget': 'Page' }, q1: { 'ui:widget': 'MultipleCheckbox', 'ui:formattedText': '', 'ui:multipleOption': { options: [empty('a'), empty('b')] } }, q2: { 'ui:widget': 'Radio', 'ui:formattedText': '', 'ui:multipleOption': { options: [empty('c'), empty('d')] } } },
+  );
+  const apply = () => {
+    const ctx: StandardContext = { doc: make(), anchors, texts: [], pdf, log: () => {}, warn: () => {} };
+    optionLabelsFromPdf.apply(ctx);
+    return ctx.doc;
+  };
+  const texts = (d: ReturnType<typeof apply>, name: string) => (d.uiSchema[name]['ui:multipleOption'] as { options: [string, { formattedText: string }][] }).options.map((o) => o[1].formattedText);
+  it('copies the words right of the box, with the "(i)" in front and the wrapped line under it, never the printed box', () => {
+    expect(texts(apply(), 'q1')).toEqual([
+      '<p>(i) A company, partnership or trust that owns not less than $5,000,000 in investments, and is not formed for the specific purpose.</p>',
+      '<p>A natural person</p>',
+    ]);
+  });
+  it('reads Yes and No boxes that sit side by side on one row', () => {
+    expect(texts(apply(), 'q2')).toEqual(['<p>Yes</p>', '<p>No</p>']);
+  });
+  it('leaves an option that already has its words, and does nothing without the PDF', () => {
+    const d = make();
+    const ctx: StandardContext = { doc: d, anchors, texts: [], pdf: null, log: () => {}, warn: () => {} };
+    optionLabelsFromPdf.apply(ctx);
+    expect(texts(ctx.doc, 'q1')).toEqual(['', '']);
+  });
+});
+
+describe('empty pages, repeated paragraphs, and the investor type that is half of a numbered question', () => {
+  it('removes a page with nothing but its heading, and keeps one with content or a hidden one', () => {
+    const d = raw(
+      [{ name: 'a', type: 'object', title: 'Empty', properties: [{ name: 'ah', type: 'null', title: 'E' }] }, { name: 'b', type: 'object', title: 'Full', properties: [{ name: 'bh', type: 'null', title: 'F' }, { name: 'q', type: 'string', title: 'q' }] }, { name: 'c', type: 'object', title: 'Hidden', properties: [] }],
+      { a: { 'ui:widget': 'Page' }, ah: { 'ui:widget': 'Header' }, b: { 'ui:widget': 'Page' }, bh: { 'ui:widget': 'Header' }, q: { 'ui:widget': 'TextBox', 'ui:formattedText': '<p>Q</p>' }, c: { 'ui:widget': 'Page', 'ui:invisible': true } },
+    );
+    const out = run(d, {}, ['empty-pages']);
+    expect(out.doc.schema.properties.map((n) => n.name)).toEqual(['b', 'c']);
+    expect(out.changes.some((c) => c.startsWith('empty-pages:'))).toBe(true);
+  });
+  it('shows a paragraph once when the annotation has it twice in a row', () => {
+    const d = raw(
+      [{ name: 'p', type: 'object', title: 'P', properties: [{ name: 'a', type: 'null', title: 'a' }, { name: 'b', type: 'null', title: 'b' }, { name: 'c', type: 'null', title: 'c' }, { name: 'a2', type: 'null', title: 'a2' }] }],
+      { p: { 'ui:widget': 'Page' }, a: { 'ui:widget': 'Paragraph', 'ui:formattedText': '<p>(each individual must sign the form)</p>' }, b: { 'ui:widget': 'Paragraph', 'ui:formattedText': '<p>(each individual must sign the form)</p>' }, c: { 'ui:widget': 'Paragraph', 'ui:formattedText': '<p>Another</p>' }, a2: { 'ui:widget': 'Paragraph', 'ui:formattedText': '<p>(each individual must sign the form)</p>' } },
+    );
+    const out = run(d, {}, ['duplicate-paragraphs']);
+    expect(out.doc.schema.properties[0].properties?.map((n) => n.name)).toEqual(['a', 'c', 'a2']);
+    expect(out.doc.uiSchema.b).toBeUndefined();
+  });
+});
+
+describe('a list split by PDF heading keeps its lead-in sentence', () => {
+  it('the sentence in front of "FOR INDIVIDUALS:" stays above the first list as a paragraph', () => {
+    const opt = (t: string) => [t.slice(0, 12), { formattedText: `<p>${t}</p>`, pdfMappings: [t.slice(0, 12)] }];
+    const d = raw(
+      [{ name: 'pg', type: 'object', title: 'P', properties: [{ name: 'lst', type: 'array', title: 'x', items: { type: 'string', enum: [] } }] }],
+      { pg: { 'ui:widget': 'Page' }, lst: { 'ui:widget': 'MultipleCheckbox', 'ui:formattedText': '<p>The Investor represents and warrants that it is an accredited investor under Rule 501: FOR INDIVIDUALS:</p>', 'ui:multipleOption': { options: [opt('Individual net worth above one million dollars'), opt('Entity with total assets above five million dollars'), opt('Entity owned entirely by accredited investors')] } } },
+    );
+    const pdf = [{ page: 0, text: '', lines: [
+      { top: 0.1, text: 'FOR INDIVIDUALS:' }, { top: 0.2, text: 'Individual net worth above one million dollars' },
+      { top: 0.3, text: 'FOR ENTITIES:' }, { top: 0.4, text: 'Entity with total assets above five million dollars' }, { top: 0.5, text: 'Entity owned entirely by accredited investors' },
+    ] }];
+    const ctx: StandardContext = { doc: d, anchors: {}, texts: [], pdf, log: () => {}, warn: () => {} };
+    for (const s of STANDARDS.filter((x) => x.id === 'option-sections')) s.apply(ctx);
+    const names = ctx.doc.schema.properties[0].properties?.map((n) => n.name);
+    expect(names).toEqual(['lst_intro', 'lst', 'lst_entities']);
+    expect(ctx.doc.uiSchema.lst_intro['ui:formattedText']).toBe('<p>The Investor represents and warrants that it is an accredited investor under Rule 501:</p>');
   });
 });

@@ -24,6 +24,8 @@ const oneOf = <T extends string>(v: unknown, allowed: readonly T[], what: string
   return v as T;
 };
 
+export { obj, arr, str, strOrNull, oneOf };
+
 /** The model's text may wrap the JSON in prose or code fences; take the outermost object. */
 export function extractJson(text: string): unknown {
   const start = text.indexOf('{');
@@ -237,6 +239,29 @@ export function validateLabelPicks(raw: unknown, offered: Map<string, number>): 
   });
 }
 
+
+export interface RawGroupLabelPick {
+  alias: string;
+  from: number;
+  to: number;
+  confidence: Confidence;
+}
+
+/** The model picks a run of the printed lines by number: it cannot write the question. */
+export function validateGroupLabelPicks(raw: unknown, offered: Map<string, number>): RawGroupLabelPick[] {
+  const o = obj(raw, 'answer');
+  return arr(o.labels ?? [], 'labels').flatMap((x, i): RawGroupLabelPick[] => {
+    const e = obj(x, `labels[${i}]`);
+    const alias = str(e.alias, `labels[${i}].alias`);
+    const count = offered.get(alias);
+    if (count === undefined) return [];
+    if (e.from === null || e.from === undefined || e.to === null || e.to === undefined) return [];
+    const ok = (n: unknown): n is number => typeof n === 'number' && Number.isInteger(n) && n >= 0 && n < count;
+    if (!ok(e.from) || !ok(e.to) || e.to < e.from) throw new AiFormatError(`labels[${i}] needs "from" and "to" line numbers from 0 to ${count - 1} ("to" not before "from"), or null`);
+    if (e.to - e.from > 7) throw new AiFormatError(`labels[${i}]: a question is not more than 8 lines`);
+    return [{ alias, from: e.from, to: e.to, confidence: confidenceOf(e.confidence) }];
+  });
+}
 
 // ------------------------------ supporting documents ------------------------------
 export interface RawSupportingGroup {

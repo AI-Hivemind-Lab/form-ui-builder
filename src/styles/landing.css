@@ -59,6 +59,8 @@
 .drop--over { border-color: var(--a-blue-deep); background: #eaf4fd; box-shadow: none; }
 .drop--done { border: 1px solid var(--a-black); background: #fff; }
 .drop__btn { padding: 22px 14px 18px; }
+.drop--wide { grid-column: 1 / -1; }
+.drop--wide .drop__btn { padding: 16px 14px 14px; }
 .drop__icon { width: 46px; height: 46px; border-radius: 0; color: var(--a-blue-deep); background: #eaf4fd; margin-bottom: 8px; }
 .drop--done .drop__icon { background: var(--a-black); color: #fff; }
 .drop__step { font: 500 11px 'IBM Plex Mono', monospace; letter-spacing: .08em; color: var(--a-mid); }

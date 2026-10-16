@@ -27,6 +27,7 @@ export const KIND_LABELS: Record<string, string> = {
   'supporting-docs': 'Supporting documents',
   'embedded-pdf': 'Embedded PDF page',
   group: 'Group',
+  'add-text': 'Text from the PDF',
 };
 
 /**
@@ -53,6 +54,8 @@ export function anchorsOf(d: Decision, doc: FormDoc): string[] {
       return [data.paragraphAlias];
     case 'group':
       return [data.fromAlias];
+    case 'add-text':
+      return [data.after ?? data.before ?? data.page ?? ''].filter(Boolean);
     case 'embedded-pdf': {
       // shown on the page it goes before (or the last page when it goes at the end)
       const pages = getAllPages(doc, true).filter((p) => !isInvisible(doc, p.name));

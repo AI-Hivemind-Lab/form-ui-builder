@@ -19,7 +19,7 @@ for (const line of readFileSync(new URL('../.env.local', import.meta.url), 'utf8
   if (m) env[m[1]] = m[2];
 }
 const pages = JSON.parse(readFileSync(pagesPath, 'utf8'));
-const built = buildForm(readFileSync(annotationPath, 'utf8'), { fundName: 'Example Fund LP', pdfPages: pages });
+const built = buildForm(readFileSync(annotationPath, 'utf8'), { fundName: 'Example Music Fund LP', pdfPages: pages });
 const doc = loadForm(built.form);
 
 void (async () => {

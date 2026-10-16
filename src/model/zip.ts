@@ -14,3 +14,15 @@ export function writeZip(files: Files): Uint8Array {
 }
 
 export { cutPdfPages };
+
+/** What a person is told when a zip is not a blank-draft package from Form Builder; null when it is one. */
+export async function checkBlankPackage(file: Blob): Promise<string | null> {
+  try {
+    const files = await readZip(file);
+    const missing = ['form_data.json', 'record_data.json', 'form_metadata.json'].filter((n) => !files[n]);
+    if (missing.length > 0) return `That zip is not a package exported from Form Builder (it has no ${missing.join(', ')}). In Form Builder, create a blank form, add the annotated PDF to it, export it as a package, and use that zip.`;
+    return null;
+  } catch {
+    return 'That file could not be read as a zip.';
+  }
+}

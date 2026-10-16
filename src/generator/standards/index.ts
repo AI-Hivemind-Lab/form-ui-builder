@@ -3,7 +3,9 @@ import { belowIndent } from './belowIndent';
 import { capitalizeLabels } from './capitalize';
 import { communityProperty } from './communityProperty';
 import { inKindGate } from './inKindGate';
+import { duplicateParagraphs } from './duplicateParagraphs';
 import { embeddedConfirmation } from './embeddedConfirmation';
+import { emptyPages } from './emptyPages';
 import { initialBlanks } from './initialBlanks';
 import { initialSelections } from './initials';
 import { investorTypeTable } from './investorTypeTable';
@@ -22,6 +24,7 @@ import { taxId } from './taxId';
 import { infoWells } from './wells';
 import { hiddenPage } from './hiddenPage';
 import { headingCaps } from './headingCaps';
+import { optionLabelsFromPdf } from './optionLabels';
 import { optionLayouts } from './optionLayouts';
 import { gpFilledFields, signatureFields, signatureGroups } from './signatures';
 import { signaturePage } from './signaturePage';
@@ -31,7 +34,7 @@ import { yesNoQuestions } from './yesNo';
 import type { Standard, StandardContext } from './types';
 
 /** In the order they run. Adding a standard is one entry here plus its own file and test. */
-export const STANDARDS: Standard[] = [hiddenPage, taxForms, gpFilledFields, signatureFields, signatureGroups, signaturePage, numberingFromPdf, yesNoLabels, optionalByNature, taxId, subscriberName, communityProperty, initialBlanks, initialSelections, investorTypeTable, monthDay, additionalPages, specifyOther, inKindGate, sameAsAbove, optionSections, pdfPages, embeddedConfirmation, infoWells, naNotes, yesNoQuestions, optionLayouts, capitalizeLabels, titleCaseTitles, headingCaps, numberedGroups, belowIndent];
+export const STANDARDS: Standard[] = [hiddenPage, duplicateParagraphs, taxForms, gpFilledFields, signatureFields, signatureGroups, signaturePage, numberingFromPdf, yesNoLabels, optionLabelsFromPdf, optionalByNature, taxId, subscriberName, communityProperty, initialBlanks, initialSelections, investorTypeTable, monthDay, additionalPages, specifyOther, inKindGate, sameAsAbove, optionSections, pdfPages, embeddedConfirmation, infoWells, naNotes, yesNoQuestions, optionLayouts, capitalizeLabels, titleCaseTitles, headingCaps, numberedGroups, belowIndent, emptyPages];
 
 export function runStandards(ctx: StandardContext, disabled: readonly string[] = []): void {
   for (const s of STANDARDS) {

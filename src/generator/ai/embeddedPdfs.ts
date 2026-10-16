@@ -1,3 +1,4 @@
+import { pageStart } from '../pageOrder';
 import { cutOf } from '../../model/pdfCut';
 import type { Anchors } from '../../model/pdfStore';
 import { getWidget, isInvisible } from '../../model/schemaWalk';
@@ -38,19 +39,10 @@ export interface EmbeddedPdfFacts {
   signaturePages: number[];
 }
 
-/** The first sub-doc page (1-based) of everything on a form page: its fields and its embedded PDFs. */
+/** The first sub-doc page (1-based) of everything on a form page: its fields (choices through their options) and its embedded PDFs. */
 function firstPageOf(doc: FormDoc, anchors: Anchors, page: SchemaNode): number | null {
-  let first: number | null = null;
-  const see = (p: number) => {
-    first = first === null ? p : Math.min(first, p);
-  };
-  walk(page.properties ?? [], (n) => {
-    const a = anchors[firstAlias(doc, n.name) ?? ''];
-    if (a) see(a.page + 1);
-    const cut = cutOf(doc.uiSchema[n.name]);
-    if (cut) see(cut.start);
-  });
-  return first;
+  const start = pageStart(doc, anchors, page);
+  return start ? start.page + 1 : null;
 }
 
 export function embeddedPdfFacts(doc: FormDoc, anchors: Anchors, pdf: PageText[]): EmbeddedPdfFacts {

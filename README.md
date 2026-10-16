@@ -17,6 +17,30 @@ npm run build    # typecheck + production build
 - Specs: `docs/superpowers/specs/2026-10-09-form-builder-prototype-design.md`, `docs/superpowers/specs/2026-10-09-add-fields-and-widgets-design.md`
 
 
+## From annotation to a form in Form Builder (the usual route)
+
+1. In Form Builder, create a blank form for the fund and add the annotated PDF to it. That is the form's only copy of the PDF, and it stays the only one.
+2. On the start page, drop the annotation JSON (step 1) and the sub-doc PDF (step 2), enter the fund name and press Run build.
+3. Review the form in the editor: accept or reject the AI proposals, check the embedded PDF pages and their page ranges.
+4. Press **Copy for transFORM** (top bar). A dialog lists what to do next. In Form Builder open the form for editing, open the **patched** transFORM (see below), paste into its Transformation box and press Apply transformation. The fields and widgets are replaced, the embedded PDFs are cut, and a new draft version of the same form is saved. Nothing is imported, so no PDF is duplicated. Applying again is safe.
+
+## The patched transFORM extension
+
+A package import creates a new copy of the source PDF every time. The **transFORM** extension (the team's Chrome extension) avoids it: it changes the form that is open for editing and saves a new draft version of the same form, so no file is uploaded. **Copy for transFORM** (top bar) turns the form into the function that extension runs: in Form Builder open the form for editing (it must already hold the annotated PDF), open transFORM, clear its Transformation box, paste, press Apply transformation, then reload. The function replaces the form's fields and widgets only; the PDFs, rules and settings the form has stay. It checks the form first for what crashes Form Builder's save (an array with no `items`). The embedded PDF pages (cuts of the sub-doc) need a small patch of the extension, in [docs/transform-extension](docs/transform-extension): the function also lists each cut (`embeddedCuts`), and the patched extension makes them with the same calls Form Builder makes when a Pdf widget's source pages are set (`getFileInfoToCut`, `cutFile`), writes the new file ids into the form (`embeddedPdf`, `pdfCuts`) and then saves. A cut the form already has (same pages, file still there) is kept, so applying twice leaves no second copy. The original extension ignores the list, and the files then have to be made in Form Builder.
+
+## The older route: a zip package (it imports the PDF again)
+
+Kept for when the extension cannot be used. Importing a package makes Form Builder upload the source PDF again every time.
+
+1. In Form Builder, create a blank draft form, add the annotated PDF to it, and export it as a package (a zip): the blank draft, one per fund.
+2. In the editor, top bar, **Zip package** menu: **Add blank draft** (a dialog asks for it too when exporting without one; the zip is kept in the browser, and "Replace blank draft ✓" means one is kept).
+3. **Export package** downloads `<fund name> - package.zip`. Import that zip in Form Builder.
+
+
+## Checking a change against real forms
+
+`npx tsx scripts/regress.ts forms.local.json` builds every real sub-doc in a local list (`forms.local.json`, not committed: the documents are the clients') and says which of them changed since the last run: pages, warnings, change log and the AI candidate lists. The first run saves a baseline in `.regress/`; add `--save` to keep a new one. Run it before and after any change to how forms are built.
+
 ## AI review (optional)
 
 On the start page you always choose both files, the annotation JSON and the PDF, and then press **Run build** (nothing starts when a file is chosen). The build can ask a model to review the form before it opens: the investor type question, who signs each signature, which address boxes to split, and fields that are optional by nature. It proposes; nothing is applied until you accept it. The proposals open with the form, each as a card on the field it is about (Accept or Dismiss), and all of them are listed at the top of the table of contents, where you can jump to one, accept the sure ones at once, or dismiss them all. What is left survives a refresh, and an accepted change can be undone with Cmd/Ctrl+Z.

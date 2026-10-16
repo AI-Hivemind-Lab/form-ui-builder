@@ -9,7 +9,7 @@ import { widgetKind } from '../model/widgetCatalog';
 import type { FormDoc } from '../model/types';
 import type { Action } from '../state/formReducer';
 import { useForm } from '../state/useFormStore';
-import { CaretIcon, PlusIcon, TrashIcon, UndoIcon, WidgetIcon } from './icons';
+import { CaretIcon, CopyIcon, PlusIcon, TrashIcon, UndoIcon, WidgetIcon } from './icons';
 import { ProposalsPanel } from './ProposalsPanel';
 import { reveal } from './reveal';
 import { WidgetPicker } from './WidgetPicker';
@@ -118,6 +118,11 @@ function TreeNodes({
                   onClick={(e) => { e.stopPropagation(); setPicker(picker === node.name ? null : node.name); }}>
                   <PlusIcon />
                 </button>
+                {widget !== 'File' && (
+                  <button type="button" className="tree__btn" aria-label={`Duplicate ${node.title}`} title="Duplicate" onClick={(e) => { e.stopPropagation(); dispatch({ type: 'duplicateNode', name: node.name }); }}>
+                    <CopyIcon />
+                  </button>
+                )}
                 <button type="button" className="tree__btn" aria-label={`Delete ${node.title}`} onClick={(e) => { e.stopPropagation(); dispatch({ type: 'removeNode', name: node.name }); }}>
                   <TrashIcon />
                 </button>

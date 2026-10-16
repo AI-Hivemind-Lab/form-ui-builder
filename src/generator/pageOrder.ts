@@ -1,3 +1,4 @@
+import { primaryBox } from '../model/pdfAnchors';
 import type { Anchors } from '../model/pdfStore';
 import { getAllPages, getWidget } from '../model/schemaWalk';
 import type { FormDoc, SchemaNode } from '../model/types';
@@ -9,28 +10,15 @@ export interface PageStart {
   top: number;
 }
 
-/** Every PDF alias a widget is tied to: its own mapping, its options' and its signature mappings. */
-function aliasesOf(doc: FormDoc, name: string): string[] {
-  const ui = doc.uiSchema[name] ?? {};
-  const out: string[] = Array.isArray(ui['ui:pdfMapping']) ? (ui['ui:pdfMapping'] as unknown[]).filter((a): a is string => typeof a === 'string') : [];
-  const options = (ui['ui:multipleOption'] as { options?: unknown } | undefined)?.options;
-  if (Array.isArray(options)) options.forEach((o) => Array.isArray(o) && out.push(...(((o[1] as { pdfMappings?: string[] } | null)?.pdfMappings) ?? [])));
-  const sig = ui['ui:signature'];
-  if (Array.isArray(sig)) sig.forEach((s) => typeof (s as { mapping?: unknown })?.mapping === 'string' && out.push((s as { mapping: string }).mapping));
-  return out;
-}
-
 /**
- * The first place of the sub-doc a page uses: the earliest of its annotated fields (by alias) and of its embedded PDFs (the page the cut
- * starts on). The single answer to "where does this page sit in the PDF"; null when nothing on the page is tied to the PDF.
+ * The first place of the sub-doc a page uses: the earliest of its fields' main boxes and of its embedded PDFs (the page the cut starts on). The single answer to "where does this page sit in the PDF"; null when nothing on the page is tied to the PDF.
  */
 export function pageStart(doc: FormDoc, anchors: Anchors, page: SchemaNode): PageStart | null {
   const found: PageStart[] = [];
   walk(page.properties ?? [], (n) => {
-    aliasesOf(doc, n.name).forEach((a) => {
-      const at = anchors[a];
-      if (at) found.push({ page: at.page, top: at.top });
-    });
+    // (a field merged from several PDF places belongs to the page of its main place, not of the copies it is also written to)
+    const at = primaryBox(doc, n, anchors);
+    if (at) found.push({ page: at.page, top: at.top });
     if (getWidget(doc, n) === 'Pdf') {
       const cut = doc.uiSchema[n.name]?.['ui:pdfCutInfo'] as { start?: unknown } | undefined;
       if (typeof cut?.start === 'number') found.push({ page: cut.start - 1, top: 0 }); // the cut's pages are numbered from 1

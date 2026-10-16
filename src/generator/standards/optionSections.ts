@@ -1,3 +1,4 @@
+import { escapeHtml } from '../../model/html';
 import { getWidget } from '../../model/schemaWalk';
 import type { SchemaNode, UiEntry } from '../../model/types';
 import type { Standard } from './types';
@@ -75,11 +76,21 @@ export const optionSections: Standard = {
         const schemaNode: SchemaNode = node.items ? { ...node, name, items: { ...node.items, enum: values } } : { ...node, name, enum: values };
         return { name, ui: partUi, schemaNode, heading: h };
       });
-      const swap = (list: SchemaNode[]): SchemaNode[] => list.flatMap((n) => (n.name === node.name ? parts.map((p) => p.schemaNode) : [n.properties ? { ...n, properties: swap(n.properties) } : n]));
+      // The label of the one list was the sentence that leads into the choices plus the last heading ("The Investor represents ... qualifies as an accredited
+      // investor: FOR INDIVIDUALS:"): the sentence is not lost, it stays above the first list as a paragraph.
+      const original = labelOf(ctx.doc, node.name);
+      const lead = original.replace(new RegExp(`\\s*${keeper.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`, 'i'), '').trim();
+      const intro = lead.length > 15 && norm(lead) !== own ? uniqueName(ctx, `${node.name}_intro`) : null;
+      const swap = (list: SchemaNode[]): SchemaNode[] =>
+        list.flatMap((n) => (n.name === node.name ? [...(intro ? [{ name: intro, type: 'null', title: lead.slice(0, 120) } as SchemaNode] : []), ...parts.map((p) => p.schemaNode)] : [n.properties ? { ...n, properties: swap(n.properties) } : n]));
       ctx.doc = {
         ...ctx.doc,
         schema: { ...ctx.doc.schema, properties: swap(ctx.doc.schema.properties) },
-        uiSchema: { ...ctx.doc.uiSchema, ...Object.fromEntries(parts.map((p) => [p.name, p.ui])) },
+        uiSchema: {
+          ...ctx.doc.uiSchema,
+          ...(intro ? { [intro]: { 'ui:widget': 'Paragraph', 'ui:formattedText': `<p>${escapeHtml(lead)}</p>`, 'ui:marginBottom': '12px' } } : {}),
+          ...Object.fromEntries(parts.map((p) => [p.name, p.ui])),
+        },
       };
       ctx.log(`option-sections: "${labelOf(ctx.doc, node.name)}" (${node.name}) was one list under ${order.length} PDF headings; now ${parts.map((p) => `${p.name} (${p.heading})`).join(' and ')}`);
       ctx.warn(`NEEDS RULE: show ${parts.map((p) => `${p.name} (${p.heading})`).join(' or ')} by investor type; only the list that applies is required`);

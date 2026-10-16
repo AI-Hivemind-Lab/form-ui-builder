@@ -30,7 +30,9 @@ export function makeAsk(fetchFn: typeof fetch = fetch, storage: Pick<Storage, 'g
     const res = await fetchFn('/api/llm', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ system, user, images }) });
     const body = (await res.json().catch(() => ({}))) as { text?: string; error?: string };
     if (!res.ok || typeof body.text !== 'string') throw new Error(body.error ?? `The AI service answered ${res.status}`);
+    // only an answer that can be read is kept: a cut-off or garbled one would come back from the cache every time
     try {
+      extractJson(body.text);
       storage?.setItem(key, body.text);
     } catch { /* cache is optional */ }
     return body.text;

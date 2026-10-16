@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
+import { createPortal } from 'react-dom';
 import { filterWidgets } from '../model/widgetCatalog';
 import { SearchIcon, WidgetIcon } from './icons';
 
@@ -8,9 +9,10 @@ export function WidgetPicker({ onPick, onClose }: { onPick: (id: string) => void
   const matches = filterWidgets(query);
   const [pos, setPos] = useState<CSSProperties | null>(null);
 
-  // The side columns scroll, which would clip an absolutely positioned popover: place it against the viewport instead.
+  // The side columns scroll and clip what is drawn inside them (and a column that blurs its background is a box for fixed children too):
+  // the popover is drawn at the end of the page and placed against the viewport, next to the button that opened it.
   useLayoutEffect(() => {
-    const host = ref.current?.closest('.tree__row, .toc__head');
+    const host = document.querySelector('[data-picker-anchor][aria-expanded="true"]')?.closest('.tree__row, .toc__head') ?? ref.current?.closest('.tree__row, .toc__head');
     if (!host) return;
     const r = host.getBoundingClientRect();
     const h = ref.current?.offsetHeight ?? 480;
@@ -28,7 +30,7 @@ export function WidgetPicker({ onPick, onClose }: { onPick: (id: string) => void
     return () => document.removeEventListener('mousedown', onDown);
   }, [onClose]);
 
-  return (
+  return createPortal(
     <div className="picker picker--fixed" style={pos ?? { visibility: 'hidden' }} ref={ref} role="dialog" aria-label="Add a widget" onKeyDown={(e) => e.key === 'Escape' && onClose()}>
       <div className="picker__search">
         <SearchIcon />
@@ -56,6 +58,7 @@ export function WidgetPicker({ onPick, onClose }: { onPick: (id: string) => void
           ))}
         </div>
       )}
-    </div>
+    </div>,
+    document.body,
   );
 }

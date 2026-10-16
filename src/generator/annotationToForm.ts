@@ -8,6 +8,7 @@
 
 import { cleanGlyphs } from './cleanText';
 import type { PageText } from './pdfText';
+import { aliasOf, defaultRuns, governing, headingTitle, isSignerAlias, pdfHeadings, splitGlued, vocabularyOf, type Heading, type Loose, type PageFacts, type Place, type RunFacts, type StructureFacts, type StructurePlan } from './structure';
 
 interface AnnObj {
   id: string;
@@ -24,6 +25,8 @@ interface AnnObj {
   /** An embedded file: the pages of the source PDF it is cut from (1-based, both included). */
   startPageIndex?: number;
   endPageIndex?: number;
+  /** A page the program made for objects the annotation left outside every page: what it is called. */
+  titleHint?: string;
 }
 
 type Pos = [number, number, number];
@@ -42,6 +45,10 @@ export interface GeneratedForm {
   /** Where each annotated PDF field sits (page, 0-1 box), by alias, to highlight it in the PDF view. */
   anchors: Record<string, { page: number; left: number; top: number; right: number; bottom: number }>;
   warnings: string[];
+  /** What the program did about the structure (objects outside a page, page names), one line each. */
+  log: string[];
+  /** The sections of the PDF, the objects that were outside every page and the pages' names: what the AI is shown. */
+  structure: StructureFacts;
   stats: { nodes: number; fieldsBelow: number; annotatedFields: number; unmappedFields: string[]; unknownMappings: string[] };
 }
 
@@ -49,7 +56,7 @@ export class AnnotationError extends Error {}
 
 // Optional only on an explicit marker. Conditional wording ("If Yes…", "Where…") is NOT optional: the field is
 // required and a rule shows it later, so it is listed as needing a rule instead.
-const OPTIONAL_TEXT = /\(optional\)|\boptional\b|\bif any\b|\bif applicable\b|\bif available\b|\bif known\b|\(\s*if\s[^)]*\)/i;
+const OPTIONAL_TEXT = /\(optional\)|\boptional\b|\bif any\b|\bif applicable\b|\bif available\b|\bif known\b|\(\s*if\s[^)]*\)|\bas (appropriate|applicable)\b|\bif\b[^.?:]{0,40}\belects?\b/i;
 /** A question ("Is the Investor ..., if applicable, ...?") is not made optional by an "if applicable" inside it: only "(optional)" does. */
 /** What one row of a repeatable is, from its heading, for the "Add another …" button ("contact", "owner"). Null keeps the default "row". */
 export function itemNameOf(label: string): string | null {
@@ -95,8 +102,12 @@ const MARKERS = [
 ];
 
 const esc = (t: string): string => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+/** The words of a piece of HTML: no tags, and the entities ("&amp;") read back as the characters they stand for. */
+export const decodeEntities = (t: string): string =>
+  t.replace(/&nbsp;/g, ' ').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'")
+    .replace(/&#(\d+);/g, (_m, d: string) => String.fromCodePoint(Number(d))).replace(/&#x([0-9a-f]+);/gi, (_m, h: string) => String.fromCodePoint(parseInt(h, 16))).replace(/&amp;/g, '&');
 const plain = (h: string | null | undefined): string =>
-  (h ?? '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').replace(/FOOT_NOTE_HERE/g, '').trim();
+  decodeEntities((h ?? '').replace(/<[^>]*>/g, '')).replace(/\s+/g, ' ').replace(/FOOT_NOTE_HERE/g, '').trim();
 const withStar = (h: string): string => (/<\/p>\s*$/.test(h) ? h.replace(/<\/p>\s*$/, `${STAR}</p>`) : h + STAR);
 const boldFirstParagraph = (h: string): string => h.replace(/<p>(.*?)<\/p>/, '<p><strong>$1</strong></p>');
 
@@ -123,9 +134,12 @@ export function nestBullets(html: string): string {
 /** A page or section title has no colon at its end ("F. Tax Exempt Status:" is "F. Tax Exempt Status"). */
 export const cleanTitle = (t: string): string => t.replace(/[\u200b-\u200d\ufeff]/g, '').replace(/\s+/g, ' ').replace(/[\s:]+$/, '').trim();
 
-/** "investor_questionnaire_tax_exempt_status" as words, for a page the annotation never titled. */
-export const humanizeAlias = (alias: string): string =>
-  alias.replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim().split(' ')
+/**
+ * "investor_questionnaire_tax_exempt_status" as words, for a page the annotation never titled. A part glued out of words
+ * ("sensitivepersonalinformation") is split with the words the document itself uses, when they are given.
+ */
+export const humanizeAlias = (alias: string, vocab?: Set<string>): string =>
+  alias.replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim().split(' ').flatMap((part) => (vocab ? (splitGlued(part, vocab) ?? [part]) : [part]))
     .map((w) => (w.length <= 3 && !['of', 'and', 'the', 'for', 'to', 'in', 'on', 'a', 'an', 'or'].includes(w) ? w.toUpperCase() : w.charAt(0).toUpperCase() + w.slice(1))).join(' ');
 
 const HEADING_NUMBERED = /^(?:[A-Z]|[IVXLC]{1,5}|\d{1,2})\.\s+[A-Z][^:]{2,100}$/;
@@ -147,6 +161,8 @@ export interface BuildOptions {
   fundName?: string;
   /** The text of the PDF's pages, to find the heading of a page the annotation gives none. */
   pdfPages?: PageText[] | null;
+  /** What to do with the objects outside every page and with pages that have no title; the program decides when it is not given. */
+  plan?: StructurePlan | null;
 }
 
 export function annotationToForm(annotationJson: string, options: BuildOptions = {}): GeneratedForm {
@@ -758,19 +774,83 @@ export function annotationToForm(annotationJson: string, options: BuildOptions =
   };
   repairInterleaving();
 
-  // ------------------------------ top level ------------------------------
+  // ------------------------------ objects outside every page ------------------------------
+  // The annotator does not always put every object into a page. What is left outside goes where the PDF's headings say it belongs
+  // (into the page that starts under the same heading, or into a page of its own); only signature blocks and what the General
+  // Partner completes are hidden, never a field the investor fills.
+  const structureLog: string[] = [];
+  const vocab = vocabularyOf([...(options.pdfPages ?? []).flatMap((p) => p.lines.map((l) => l.text)), ...all.flatMap((o) => (o.content && typeof o.content[1] === 'string' ? [o.content[1].replace(/<[^>]*>/g, ' ')] : []))]);
+  const headings: Heading[] = pdfHeadings(options.pdfPages, fundName);
+  const placeOf = (pos: Pos): Place | null => (pos[0] < 99 ? { page: pos[0], top: pos[1] } : null);
+  const holdsPage = (o: AnnObj): boolean => o.__typename__ === 'PdfPageFieldDTO' || realChildren(o).some(holdsPage);
+  const pageObjs = all.filter((o) => o.__typename__ === 'PdfPageFieldDTO');
   const referenced = new Set(all.flatMap((o) => o.children ?? []));
+  const outside = all.filter((o) => o.__typename__ !== 'PdfTextBlockDTO' && o.__typename__ !== 'PdfTextLabelDTO' && !referenced.has(o.id) && !holdsPage(o));
+  const isSignerObj = (o: AnnObj): boolean => {
+    const kids = realChildren(o);
+    if (['PdfGroupFieldDTO', 'PdfRepeatableFieldDTO'].includes(o.__typename__)) return kids.length > 0 && kids.every((k) => k.__typename__ === 'PdfParagraphFieldDTO' || isSignerObj(k));
+    return isSignerAlias(o.name, o.__typename__);
+  };
+  const looseOf = (o: AnnObj): Loose => ({
+    id: o.id, name: o.name, type: o.__typename__, at: placeOf(atomPos(o)), signer: isSignerObj(o),
+    text: plain(labelHtml(o) ?? (o.__typename__ === 'PdfParagraphFieldDTO' ? paraHtml(o) : '')).slice(0, 80),
+  });
+  const planned = defaultRuns(headings, pageObjs.map((p) => ({ id: p.id, name: p.name, start: placeOf(subtreePos(p)) })), outside.map(looseOf));
+  const runFacts: RunFacts[] = [];
+  const madePages = new Map<string, AnnObj>();
+  const takenNames = new Set(all.map((o) => o.name));
+  for (const run of planned) {
+    let action = run.action;
+    const given = options.plan?.runs[run.id];
+    if (given && (given.kind !== 'page' || pageObjs.some((p) => p.name === given.page) || madePages.has(given.page))) action = given;
+    const ids = run.items.map((i) => i.id);
+    const at = (i: Loose): number => (i.at?.page ?? 0) + 1;
+    const kinds: Record<string, number> = {};
+    run.items.forEach((i) => { kinds[i.type.replace(/^Pdf|FieldDTO$/g, '')] = (kinds[i.type.replace(/^Pdf|FieldDTO$/g, '')] ?? 0) + 1; });
+    runFacts.push({
+      id: run.id, count: run.items.length, fromPage: at(run.items[0]), toPage: at(run.items[run.items.length - 1]), kinds,
+      sample: run.items.slice(0, 5).map((i) => ({ name: i.name, text: i.text })), heading: run.heading ? { id: run.heading.id, text: run.heading.text } : null, hideable: run.hideable, action,
+    });
+    if (action.kind === 'hidden') continue;
+    let target: AnnObj | undefined;
+    if (action.kind === 'page') target = pageObjs.find((p) => p.name === action.page) ?? madePages.get(action.page);
+    else {
+      const key = action.headingId ?? action.title;
+      target = madePages.get(key);
+      if (!target) {
+        let name = aliasOf(action.title);
+        for (let n = 2; takenNames.has(name); n += 1) name = `${aliasOf(action.title)}_${n}`;
+        takenNames.add(name);
+        target = { id: `synthetic:section:${key}`, __typename__: 'PdfPageFieldDTO', name, children: [], titleHint: action.title };
+        objs.set(target.id, target);
+        all.push(target);
+        madePages.set(key, target);
+        madePages.set(name, target);
+      }
+    }
+    if (!target) continue;
+    target.children = [...(target.children ?? []), ...ids];
+    structureLog.push(action.kind === 'new'
+      ? `structure: ${ids.length} object(s) on PDF pages ${at(run.items[0])}–${at(run.items[run.items.length - 1])} that the annotation left outside every page (${run.items.slice(0, 3).map((i) => i.name).join(', ')}…) became the page "${target.titleHint ?? target.name}"`
+      : `structure: ${ids.length} object(s) on PDF pages ${at(run.items[0])}–${at(run.items[run.items.length - 1])} that the annotation left outside every page (${run.items.slice(0, 3).map((i) => i.name).join(', ')}…) were put into the page "${target.name}"`);
+  }
+
+  // ------------------------------ top level ------------------------------
+  const referencedNow = new Set(all.flatMap((o) => o.children ?? []));
   const roots = all
-    .filter((o) => o.__typename__ !== 'PdfTextBlockDTO' && o.__typename__ !== 'PdfTextLabelDTO' && !referenced.has(o.id))
+    .filter((o) => o.__typename__ !== 'PdfTextBlockDTO' && o.__typename__ !== 'PdfTextLabelDTO' && !referencedNow.has(o.id))
     .sort(byPos(atomPos));
 
+  const pageFacts: PageFacts[] = [];
   /** A page: its heading (the fund name as subtitle) then its content. */
   const buildPage = (p: AnnObj, synthetic?: string): Node => {
     pageTitle = null;
     const content = buildChildren(p, 1);
-    const lab = labelHtml(p);
+    const rawLabel = labelHtml(p);
+    const lab = rawLabel !== null && plain(rawLabel) !== '' ? rawLabel : null; // a highlight with no words in it is no title
     const heading = pageTitle as string | null; // set when the page has its own title paragraph
     let title = heading ?? (lab ? plain(lab) : '');
+    let titleSource: PageFacts['source'] = lab ? 'highlight' : 'paragraph';
     if (heading === null && !synthetic) {
       if (lab) {
         title = cleanTitle(title);
@@ -793,16 +873,31 @@ export function annotationToForm(annotationJson: string, options: BuildOptions =
         } else if (embeddedName) {
           title = embeddedName;
           source = 'the name of its embedded file';
+          titleSource = 'heading';
         } else {
+          // the AI's name for it (read from the PDF), the name a page made for loose objects was given, the section heading the PDF
+          // prints where the page starts, the heading right above its first object, and last the alias as words
+          const given = options.plan?.titles[p.name]?.title;
+          const section = start[0] < 99 ? governing(headings, { page: start[0], top: start[1] }, true) : null;
           const printed = start[0] < 99 ? headingAbove(options.pdfPages, start[0], start[1] + 0.02) : null;
-          title = cleanTitle(printed ?? humanizeAlias(p.name));
-          source = printed ? 'the PDF' : 'its alias';
+          if (given) { title = cleanTitle(given); source = 'the AI (read from the PDF)'; titleSource = 'heading'; }
+          else if (p.titleHint) { title = cleanTitle(p.titleHint); source = 'a heading of the PDF'; titleSource = 'heading'; }
+          else if (section) { title = cleanTitle(headingTitle(section)); source = 'a heading of the PDF'; titleSource = 'heading'; }
+          else if (printed) { title = cleanTitle(printed); source = 'the PDF'; titleSource = 'heading'; }
+          else { title = cleanTitle(humanizeAlias(p.name, vocab)); source = 'its alias'; titleSource = 'alias'; }
         }
         content.unshift(makeHeader(title, 'Heading1'));
         warnings.push(`PAGE HEADING GUESSED: page ${p.name} has no highlighted title; its heading "${title}" came from ${source} (highlight the title in the annotation to set it)`);
       }
     }
-    title = synthetic ?? (cleanTitle(title) || p.name);
+    title = synthetic ?? (cleanTitle(title) || humanizeAlias(p.name, vocab));
+    if (!synthetic) {
+      const start = subtreePos(p);
+      const at: Place | null = placeOf(start);
+      const near = at ? headings.filter((h) => h.page === at.page || h.id === governing(headings, at)?.id) : [];
+      const sect = at ? governing(headings, at, true) : null;
+      pageFacts.push({ name: p.name, title, source: titleSource, startPage: (at?.page ?? -1) + 1, heading: sect ? { id: sect.id, text: sect.text } : null, candidates: near.slice(0, 6).map((h) => ({ id: h.id, text: h.text })), firstTexts: content.slice(0, 4).map((n) => plain(String(nodesUi[n.name]?.['ui:formattedText'] ?? '') || n.title).slice(0, 90)).filter(Boolean), proposed: sect ? { title: headingTitle(sect), headingId: sect.id } : null });
+    }
     addUi(p.name, { 'ui:widget': 'Page', 'ui:marginBottom': '12px', 'ui:pdfMapping': [], 'ui:signature': [] });
     return { name: p.name, type: 'object', title, properties: content };
   };
@@ -838,7 +933,7 @@ export function annotationToForm(annotationJson: string, options: BuildOptions =
         const lab = labelHtml(r);
         if (lab === null) warnings.push(`LABEL MISSING: section ${r.name} (a group of pages) has no highlighted text; its name is its alias`);
         addUi(r.name, { 'ui:widget': 'Group', 'ui:marginBottom': '12px', 'ui:enabledComment': true });
-        out.push({ name: r.name, type: 'object', title: cleanTitle(lab ? plain(lab).slice(0, 120) : '') || r.name, properties: buildPageLevel(realChildren(r)) });
+        out.push({ name: r.name, type: 'object', title: cleanTitle(lab ? plain(lab).slice(0, 120) : '') || humanizeAlias(r.name, vocab), properties: buildPageLevel(realChildren(r)) });
       } else loose.push(r);
     }
     flushLoose();
@@ -900,6 +995,8 @@ export function annotationToForm(annotationJson: string, options: BuildOptions =
     form,
     anchors,
     warnings: [...new Set(warnings)], // radios are built twice; report each once
+    log: structureLog,
+    structure: { headings, pageNames: pageObjs.map((p) => p.name), runs: runFacts, pages: pageFacts },
     stats: {
       nodes: allNodes.size,
       fieldsBelow: below.length,

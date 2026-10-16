@@ -240,6 +240,24 @@ describe('applying decisions', () => {
     expect(opts[0][1].pdfMappings).toBeUndefined();
     expect(r.warnings.some((w) => w.startsWith('NEEDS RULE: prefill the numbered list types'))).toBe(true);
   });
+  it('copies the type list when it is one half of a numbered question: question 3 keeps its FOR INDIVIDUALS list', () => {
+    const d = raw(
+      [{ name: 'p', type: 'object', title: 'Data', properties: [{ name: 'h', type: 'null', title: 'H' }, { name: 'question_3', type: 'object', title: 'Question 3', properties: [
+        { name: 'intro', type: 'null', title: 'i' }, { name: 'ind', type: 'string', title: 'FOR INDIVIDUALS' }, { name: 'ent', type: 'string', title: 'FOR ENTITIES' },
+      ] }] }],
+      {
+        p: { 'ui:widget': 'Page' }, h: { 'ui:widget': 'Header', 'ui:heading': 'H' }, question_3: { 'ui:widget': 'Group' }, intro: { 'ui:widget': 'Paragraph', 'ui:formattedText': '<p>3. Form of ownership of the Interest:</p>' },
+        ind: { 'ui:widget': 'Radio', 'ui:formattedText': '<p>FOR INDIVIDUALS</p>', 'ui:multipleOption': { options: [['i1', { formattedText: '<p>Individual</p>', pdfMappings: ['i1'] }], ['i2', { formattedText: '<p>Joint Tenants</p>', pdfMappings: ['i2'] }]] } },
+        ent: { 'ui:widget': 'Radio', 'ui:formattedText': '<p>FOR ENTITIES</p>', 'ui:multipleOption': { options: [['e1', { formattedText: '<p>Corporation</p>' }]] } },
+      },
+    );
+    const r = applyDecisions(d, {}, [], [dec('t', { kind: 'investor-type', value: { source: 'picklist', selectionMode: 'radio', existingGroupAlias: 'ind', individual: [{ label: 'Individual', optionAlias: 'i1' }, { label: 'Joint Tenants', optionAlias: 'i2' }], entity: [{ label: 'Corporation', optionAlias: null }], unplaced: [] } })]);
+    const q3 = r.doc.schema.properties[0].properties?.find((n) => n.name === 'question_3');
+    expect(q3?.properties?.map((n) => n.name)).toEqual(['intro', 'ind', 'ent']);
+    expect(r.doc.uiSchema.ind['ui:disable']).toBe(true);
+    expect(nodeNames(r.doc, 'p')).toContain('investor_type');
+    expect(r.warnings.some((w) => w.startsWith('NEEDS RULE: prefill the numbered list ind'))).toBe(true);
+  });
   it('maps several PDF places to one field, and keeps a prefilled field invisible with a rule to write', () => {
     const d = doc();
     d.schema.properties[1].properties?.push({ name: 'sigcopy', type: 'string', title: 'c' });
@@ -767,9 +785,22 @@ describe('embedded PDF pages are never proposals inside another page', () => {
   });
 });
 
+describe('what an accepted proposal leaves behind', () => {
+  it('a page left with only its heading is removed, and a proposal that keeps every text reports none lost', () => {
+    const d = raw(
+      [{ name: 'a', type: 'object', title: 'A', properties: [{ name: 'ah', type: 'null', title: 'A' }, { name: 'q', type: 'string', title: 'q' }] }, { name: 'b', type: 'object', title: 'B', properties: [{ name: 'bh', type: 'null', title: 'B' }, { name: 'r', type: 'string', title: 'r' }] }],
+      { a: { 'ui:widget': 'Page' }, ah: { 'ui:widget': 'Header', 'ui:heading': 'A' }, q: { 'ui:widget': 'TextBox', 'ui:formattedText': '<p>Telephone number of the investor</p>' }, b: { 'ui:widget': 'Page' }, bh: { 'ui:widget': 'Header', 'ui:heading': 'B' }, r: { 'ui:widget': 'TextBox', 'ui:formattedText': '<p>Other</p>' } },
+    );
+    const r = applyDecisions(d, {}, [], [dec('mv', { kind: 'move-fields', aliases: ['q'], targetPage: 'b', wrapperTitle: 'Moved' })]);
+    expect(r.doc.schema.properties.map((n) => n.name)).toEqual(['b']);
+    const gone = applyDecisions(d, {}, ['Telephone number of the investor'], [dec('d', { kind: 'optional', alias: 'r' })]);
+    expect(gone.warnings.filter((w) => w.startsWith('TEXT LOST'))).toEqual([]);
+  });
+});
+
 describe('embedded PDF pages that ask for an agreement or a consent', () => {
   const base = { kind: 'embedded-pdf' as const, fileName: 'F - X.pdf', title: 'X', start: 8, end: 27, beforePage: null, subtitle: 'F' };
-  const d0 = () => raw([{ name: 'p1', type: 'object', title: 'P', properties: [] }], { p1: { 'ui:widget': 'Page' } });
+  const d0 = () => raw([{ name: 'p1', type: 'object', title: 'P', properties: [{ name: 'f', type: 'string', title: 'f' }] }], { p1: { 'ui:widget': 'Page' }, f: { 'ui:widget': 'TextBox', 'ui:formattedText': '<p>Field</p>' } });
   it('get the checkbox right under the PDF inside their own page', () => {
     const out = applyDecisions(d0(), {}, [], [dec('a', { ...base, title: 'Subscription Agreement', confirm: 'agreement' })]).doc;
     const page = out.schema.properties[1];
@@ -806,5 +837,41 @@ describe('supporting documents given instead of a form; confirmation boxes stay 
       { sa: { 'ui:widget': 'Page' }, pdf: { 'ui:widget': 'Pdf' }, sa_agreement: { 'ui:widget': 'MultipleCheckbox', 'ui:multipleOption': { options: [['agree', { formattedText: '<p><strong>I confirm that I have read, understand, and agree to the above. *</strong></p>' }]] } }, other: { 'ui:widget': 'TextBox', 'ui:formattedText': '<p>Other</p>' } },
     );
     expect(mixedPageCandidates(d)[0].fields.map((f) => f.alias)).toEqual(['other']);
+  });
+});
+
+import { validateGroupLabelPicks } from './validate';
+import { validateStructure } from './structure';
+import type { StructureFacts } from '../structure';
+
+describe('the questions above choices, picked by line number', () => {
+  it('takes a run of the printed lines by number, drops an alias it was not given, and refuses a run that is not there', () => {
+    const offered = new Map([['q1', 5]]);
+    expect(validateGroupLabelPicks({ labels: [{ alias: 'q1', from: 1, to: 3, confidence: 'high' }, { alias: 'other', from: 0, to: 0 }, { alias: 'q1', from: null, to: null }] }, offered)).toEqual([{ alias: 'q1', from: 1, to: 3, confidence: 'high' }]);
+    expect(() => validateGroupLabelPicks({ labels: [{ alias: 'q1', from: 2, to: 9 }] }, offered)).toThrow(AiFormatError);
+    expect(() => validateGroupLabelPicks({ labels: [{ alias: 'q1', from: 3, to: 1 }] }, offered)).toThrow(AiFormatError);
+  });
+});
+
+describe('the structure plan', () => {
+  const facts: StructureFacts = {
+    headings: [{ id: 'h1', page: 34, top: 0.2, text: 'E. Supplemental Data for Entities', kind: 'lettered' }],
+    pageNames: ['a', 'b'],
+    pages: [{ name: 'a', title: 'A', source: 'alias', startPage: 5, heading: null, candidates: [], firstTexts: [], proposed: null }],
+    runs: [
+      { id: 'r1', count: 3, fromPage: 35, toPage: 36, kinds: {}, sample: [], heading: null, hideable: false, action: { kind: 'hidden' } },
+      { id: 'r2', count: 2, fromPage: 20, toPage: 20, kinds: {}, sample: [], heading: null, hideable: true, action: { kind: 'hidden' } },
+    ],
+  };
+  it('names a heading by its id, a page by its name, and hides only what may be hidden', () => {
+    const plan = validateStructure({ runs: [{ run: 'r1', action: 'new', headingId: 'h1' }, { run: 'r2', action: 'hidden' }], pages: [{ page: 'a', title: 'Consent for the Processing of Personal Data' }] }, facts);
+    expect(plan.runs).toEqual({ r1: { kind: 'new', title: 'E. Supplemental Data for Entities', headingId: 'h1' }, r2: { kind: 'hidden' } });
+    expect(plan.titles.a).toEqual({ title: 'Consent for the Processing of Personal Data' });
+  });
+  it('refuses to hide a run with fields an investor fills, a page that is not there, an invented heading, and a title that is an alias', () => {
+    expect(() => validateStructure({ runs: [{ run: 'r1', action: 'hidden' }] }, facts)).toThrow(/cannot be hidden/);
+    expect(() => validateStructure({ runs: [{ run: 'r1', action: 'page', page: 'zzz' }] }, facts)).toThrow(AiFormatError);
+    expect(() => validateStructure({ runs: [{ run: 'r1', action: 'new', headingId: 'h99' }] }, facts)).toThrow(AiFormatError);
+    expect(() => validateStructure({ pages: [{ page: 'a', title: 'sensitive_personal_information' }] }, facts)).toThrow(AiFormatError);
   });
 });

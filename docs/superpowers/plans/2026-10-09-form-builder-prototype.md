@@ -207,7 +207,7 @@ body { font-family: sans-serif; }
 
 Run:
 ```bash
-mkdir -p src/data && cp "demo form-content.json" src/data/demo-form.json
+mkdir -p src/data && cp "/Users/ops/Downloads/demo form-content.json" src/data/demo-form.json
 npm install
 ```
 Expected: `node_modules` created, no errors.
@@ -2519,7 +2519,7 @@ Create scratch files in the session scratchpad directory (not in the repo) and l
 1. `bad.json` containing `{oops` -> toast "File is not valid JSON"; form unchanged.
 2. `empty.json` containing `{"namespaceFormSchemaMap":{}}` -> toast ""namespaceFormSchemaMap" is empty"; form unchanged.
 3. `weird.json`: a copy of the demo with one field's `ui:widget` changed to `"Signature"` and one node's uiSchema entry removed -> loads; the unknown widget shows "Unsupported widget: Signature"; the node without a uiSchema entry renders as a TextBox labeled with its title; nothing throws.
-4. The original `demo form-content.json` -> loads and looks identical to the bundled default; toast "Loaded “demo form-content.json”".
+4. The original `/Users/ops/Downloads/demo form-content.json` -> loads and looks identical to the bundled default; toast "Loaded “demo form-content.json”".
 Fix any failure before continuing.
 
 - [ ] **Step 3: Final checks**

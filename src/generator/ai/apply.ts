@@ -10,11 +10,14 @@ import { capitalizeLabel } from '../standards/capitalize';
 import { nameBlockRuleNote } from '../standards/subscriberName';
 import { followUpsOf, normalizeYesNo } from '../standards/yesNo';
 import { fileGroupParts, helpTextHtml, infoWell, submitMessageHtml } from '../standards/fileGroup';
-import { firstAlias, labelOf, patchUi, uniqueName, walk } from '../standards/util';
+import { firstAlias, inNumberedQuestion, isNumbered, labelOf, patchUi, uniqueName, walk } from '../standards/util';
 import { holds, resolveRange, wrapSiblings } from '../grouping';
 import { confirmationParts, signingNote } from '../standards/embeddedConfirmation';
 import { REVIEW_SENTENCE } from '../standards/pdfPages';
+import { lostTexts, lostWarning } from '../coverage';
+import { emptyPages } from '../standards/emptyPages';
 import { groupAlias } from './supportingDocs';
+import { wellFor } from '../standards/wells';
 import type { Decision, InvestorTypeData } from './types';
 
 const STAR = ' <span style="color: rgb(219, 55, 55);">*</span>';
@@ -322,7 +325,8 @@ function applyInvestorType(ctx: StandardContext, data: InvestorTypeData, wrapper
   const existingNode = data.existingGroupAlias ? findNode(ctx.doc.schema.properties, data.existingGroupAlias) : undefined;
   const existingUi = existingNode ? ctx.doc.uiSchema[existingNode.name] : undefined;
   const existingOptions = ((existingUi?.['ui:multipleOption'] as { options?: unknown } | undefined)?.options ?? []) as [string, Record<string, unknown>][];
-  const numbered = existingNode ? /^\s*\d+[.)]/.test(labelOf(ctx.doc, existingNode.name)) : false;
+  // a list that is a numbered question, or one half of one, is copied: moving it would take its answers out of the question
+  const numbered = existingNode ? isNumbered(labelOf(ctx.doc, existingNode.name)) || inNumberedQuestion(ctx.doc, existingNode.name) : false;
   const reuse = Boolean(existingNode) && !numbered;
   const name = namer(ctx);
   const used = new Set<string>();
@@ -468,6 +472,48 @@ function applyEmbeddedPdf(ctx: StandardContext, d: Extract<Decision['data'], { k
   ctx.log(`ai: new page "${d.title}" with the pages ${d.start} - ${d.end} of the sub-doc as the PDF "${d.fileName}"`);
 }
 
+// ------------------------------ text the form never showed ------------------------------
+/** A paragraph with the words the PDF prints, as printed, where they sit on the PDF page (after the element above, else before the one below). */
+function applyAddText(ctx: StandardContext, d: Extract<Decision['data'], { kind: 'add-text' }>): void {
+  const text = d.text.replace(/\s+/g, ' ').trim();
+  if (text === '') return;
+  const name = uniqueName(ctx, 'paragraph_pdf');
+  const well = wellFor(text);
+  const ui: UiEntry = { 'ui:widget': 'Paragraph', 'ui:formattedText': `<p>${escapeHtml(text)}</p>`, 'ui:marginBottom': '12px', ...(well ? { 'ui:wellType': well } : {}) };
+  const node: SchemaNode = { name, type: 'null', title: text.slice(0, 120) };
+  const place = (list: SchemaNode[], parentIsPage: boolean): SchemaNode[] | null => {
+    const at = d.after ? list.findIndex((n) => n.name === d.after) : d.before ? list.findIndex((n) => n.name === d.before) : -1;
+    if (at >= 0) return [...list.slice(0, d.after ? at + 1 : at), node, ...list.slice(d.after ? at + 1 : at)];
+    if (parentIsPage) {
+      const last = list.length > 0 && list[list.length - 1].name.endsWith('_signatures') ? list.length - 1 : list.length; // before the page's signatures
+      return [...list.slice(0, last), node, ...list.slice(last)];
+    }
+    return null;
+  };
+  let done = false;
+  const visit = (list: SchemaNode[]): SchemaNode[] =>
+    list.map((n) => {
+      if (done) return n;
+      const isPage = getWidget(ctx.doc, n) === 'Page';
+      const target = d.page ? n.name === d.page : (n.properties ?? []).some((c) => c.name === d.after || c.name === d.before);
+      if (target && n.properties) {
+        const next = place(n.properties, isPage);
+        if (next) {
+          done = true;
+          return { ...n, properties: next };
+        }
+      }
+      return n.properties ? { ...n, properties: visit(n.properties) } : n;
+    });
+  const properties = visit(ctx.doc.schema.properties);
+  if (!done) {
+    ctx.warn(`TEXT NOT ADDED: the PDF page ${d.pdfPage} text "${text.slice(0, 60)}…" has no place on the form: the elements around it are not there any more`);
+    return;
+  }
+  ctx.doc = { ...ctx.doc, schema: { ...ctx.doc.schema, properties }, uiSchema: { ...ctx.doc.uiSchema, [name]: ui } };
+  ctx.log(`ai: the PDF text on page ${d.pdfPage} that the form did not show was added as the paragraph ${name}: "${text.slice(0, 70)}"`);
+}
+
 // ------------------------------ groups ------------------------------
 /**
  * A group around the run of neighbours between two elements. The run is found by its two ends where the elements are NOW, so it works
@@ -507,6 +553,7 @@ export function applyDecisions(doc: FormDoc, anchors: Anchors, texts: string[], 
   of('acronym').forEach((d) => applyAcronym(ctx, d.word));
   of('supporting-docs').forEach((d) => applySupportingDocs(ctx, d));
   of('embedded-pdf').forEach((d) => applyEmbeddedPdf(ctx, d));
+  of('add-text').forEach((d) => applyAddText(ctx, d));
   [...of('group')].sort((a, b) => b.size - a.size).forEach((d) => applyGroup(ctx, d)); // grouping runs last: the biggest groups first
   const type = of('investor-type')[0];
   if (type) {
@@ -514,5 +561,9 @@ export function applyDecisions(doc: FormDoc, anchors: Anchors, texts: string[], 
     nameBlockRuleNote(ctx);
   }
   normalizeYesNo(ctx); // whatever was moved or built, a Yes / No question stays on one line with indented follow-ups
+  emptyPages.apply(ctx); // a change that moved everything off a page leaves no page with only its heading
+  // a proposal must not take words off the form: what the form showed before and no longer shows is said
+  const lost = decisions.length > 0 ? lostTexts(ctx.doc, texts, doc) : [];
+  if (lost.length > 0) warnings.push(lostWarning(lost, 'TEXT LOST', 'text(s) the form showed are gone after this change'));
   return { doc: ctx.doc, log, warnings };
 }

@@ -1,9 +1,10 @@
-import { getWidget } from '../../model/schemaWalk';
+import { findParentName } from '../../model/addField';
+import { findNode, getWidget } from '../../model/schemaWalk';
 import type { FormDoc, SchemaNode, UiEntry } from '../../model/types';
 import type { StandardContext } from './types';
 
 export const plainText = (html: unknown): string =>
-  typeof html === 'string' ? html.replace(/<[^>]*>/g, '').replace(/FOOT_NOTE_HERE/g, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim() : '';
+  typeof html === 'string' ? html.replace(/<[^>]*>/g, '').replace(/FOOT_NOTE_HERE/g, '').replace(/&nbsp;/g, ' ').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim() : '';
 
 /** A field's label without the required star. */
 export const labelOf = (doc: FormDoc, name: string): string => plainText(doc.uiSchema[name]?.['ui:formattedText']).replace(/\s*\*$/, '').trim();
@@ -68,4 +69,21 @@ export function firstAlias(doc: FormDoc, name: string): string | undefined {
   const sig = ui['ui:signature'];
   if (Array.isArray(sig) && typeof (sig[0] as { mapping?: unknown })?.mapping === 'string') return (sig[0] as { mapping: string }).mapping;
   return undefined;
+}
+
+/** A label that starts with its question number: "3.", "4)". */
+export const isNumbered = (text: string): boolean => /^\s*\d+[.)]/.test(text);
+
+/**
+ * Whether a field is part of a numbered question: it sits in a "Question N" group, in a group whose own label is numbered, or under a
+ * numbered paragraph ("3. Form of ownership of the Interest:" with FOR INDIVIDUALS and FOR ENTITIES lists below it). Taking such a field
+ * out of its place would take its answers out of the question.
+ */
+export function inNumberedQuestion(doc: FormDoc, name: string): boolean {
+  const parentName = findParentName(doc, name);
+  const parent = parentName ? findNode(doc.schema.properties, parentName) : undefined;
+  if (!parent) return false;
+  if (/^question_\d+$/.test(parent.name) || isNumbered(labelOf(doc, parent.name))) return true;
+  const kids = parent.properties ?? [];
+  return kids.slice(0, kids.findIndex((c) => c.name === name)).some((c) => getWidget(doc, c) === 'Paragraph' && isNumbered(plainText(doc.uiSchema[c.name]?.['ui:formattedText'])));
 }

@@ -7,12 +7,12 @@ const dec = new TextDecoder();
 const j = (v: unknown): Uint8Array => enc.encode(JSON.stringify(v));
 const blank = (): Files => ({
   'form_data.json': j({
-    form: { namespaceFormSchemaMap: { main: { schema: { type: 'object', properties: [{ name: 'file0', type: 'null', title: 'sample-fund.pdf' }] }, uiSchema: { file0: { 'ui:widget': 'File', 'ui:fileName': 'sample-fund.pdf' } } } }, gaiaLogicVersion: 100 },
-    uploadedPdf: [['forAAAA.fdr000001.fil111111111', { name: 'sample-fund.pdf', fields: [{ key: 'x' }] }]], uploadedDocx: [], embeddedPdf: [], associatedLinks: [],
+    form: { namespaceFormSchemaMap: { main: { schema: { type: 'object', properties: [{ name: 'file0', type: 'null', title: 'sub-doc.pdf' }] }, uiSchema: { file0: { 'ui:widget': 'File', 'ui:fileName': 'sub-doc.pdf' } } } }, gaiaLogicVersion: 100 },
+    uploadedPdf: [['forAAAA.fdr000001.fil111111111', { name: 'sub-doc.pdf', fields: [{ key: 'x' }] }]], uploadedDocx: [], embeddedPdf: [], associatedLinks: [],
   }),
-  'record_data.json': j({ rData: { '0::u1': { fileName: 'sample-fund.pdf' }, '5::u5': { fileName: 'form_data.json', uploadedPdfFileNameRecord: { 'sample-fund.pdf': [0, 'u1'] }, embeddedPdfFileNameRecord: {} } }, rKey: [] }),
+  'record_data.json': j({ rData: { '0::u1': { fileName: 'sub-doc.pdf' }, '5::u5': { fileName: 'form_data.json', uploadedPdfFileNameRecord: { 'sub-doc.pdf': [0, 'u1'] }, embeddedPdfFileNameRecord: {} } }, rKey: [] }),
   'form_metadata.json': j({ id: 'for0.fve0.fvm', widgetSources: { file0: 'MANUAL' }, widgetSourceSummary: { sourceCount: { '0': 1 }, totalCount: 1 }, isPdfCutsMigrated: true }),
-  'sample-fund.pdf': new Uint8Array([1, 2, 3]),
+  'sub-doc.pdf': new Uint8Array([1, 2, 3]),
 });
 const ours = () => ({
   namespaceFormSchemaMap: { main: {
@@ -36,12 +36,12 @@ describe('the package for Form Builder\'s import', () => {
 
   it('keeps the blank draft\'s files and replaces the form, with the sub-doc File named after the annotated PDF', async () => {
     const { files } = await run();
-    expect(files['sample-fund.pdf']).toEqual(new Uint8Array([1, 2, 3]));
+    expect(files['sub-doc.pdf']).toEqual(new Uint8Array([1, 2, 3]));
     const data = JSON.parse(dec.decode(files['form_data.json']));
-    expect(data.uploadedPdf).toEqual([['forAAAA.fdr000001.fil111111111', { name: 'sample-fund.pdf', fields: [{ key: 'x' }] }]]); // the system-made part stays
+    expect(data.uploadedPdf).toEqual([['forAAAA.fdr000001.fil111111111', { name: 'sub-doc.pdf', fields: [{ key: 'x' }] }]]); // the system-made part stays
     const main = data.form.namespaceFormSchemaMap.main;
-    expect(main.uiSchema.file0['ui:fileName']).toBe('sample-fund.pdf');
-    expect(main.schema.properties[0].properties[0].title).toBe('sample-fund.pdf');
+    expect(main.uiSchema.file0['ui:fileName']).toBe('sub-doc.pdf');
+    expect(main.schema.properties[0].properties[0].title).toBe('sub-doc.pdf');
     expect(data.form.gaiaLogicVersion).toBe(200);
   });
 
@@ -59,7 +59,7 @@ describe('the package for Form Builder\'s import', () => {
     const [, uuid] = formRecord.embeddedPdfFileNameRecord['Fund - Subscription Agreement.pdf'];
     expect(record[`0::${uuid}`]).toEqual({ fileName: 'Fund - Subscription Agreement.pdf' });
     const meta = JSON.parse(dec.decode(files['form_metadata.json']));
-    expect(meta.pdfCuts).toEqual({ 'Fund - Subscription Agreement.pdf': { fileName: 'sample-fund.pdf', start: 8, end: 27 } });
+    expect(meta.pdfCuts).toEqual({ 'Fund - Subscription Agreement.pdf': { fileName: 'sub-doc.pdf', start: 8, end: 27 } });
     expect(meta.widgetSourceSummary).toEqual({ sourceCount: { '0': 5 }, totalCount: 5 });
     expect(notes.some((n) => n.startsWith('plain: not packaged'))).toBe(true);
   });

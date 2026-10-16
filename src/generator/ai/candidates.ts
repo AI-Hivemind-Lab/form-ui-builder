@@ -1,4 +1,5 @@
 import { findParentName } from '../../model/addField';
+import { aliasesOf, anchorsFor, primaryBox, primaryBoxOfName } from '../../model/pdfAnchors';
 import type { Anchors } from '../../model/pdfStore';
 import { findNode, getWidget } from '../../model/schemaWalk';
 import type { FormDoc, SchemaNode } from '../../model/types';
@@ -8,7 +9,7 @@ import { widgetKind } from '../../model/widgetCatalog';
 import type { PageText } from '../pdfText';
 import { isConfirmationWidget } from '../standards/embeddedConfirmation';
 import { isBooleanList } from '../standards/optionLayouts';
-import { firstAlias, labelOf, nodesOf, plainText, walk } from '../standards/util';
+import { firstAlias, inNumberedQuestion, isNumbered, labelOf, nodesOf, plainText, walk } from '../standards/util';
 
 /** Facts about the form, in the shape the AI is shown. Pages are 1-based, as printed. */
 export interface OptionGroupCandidate {
@@ -41,11 +42,11 @@ export interface FieldCandidate {
 }
 
 const pageOf = (doc: FormDoc, anchors: Anchors, name: string): number | null => {
-  const a = anchors[firstAlias(doc, name) ?? ''];
+  const a = primaryBoxOfName(doc, name, anchors);
   return a ? a.page + 1 : null;
 };
 const topOf = (doc: FormDoc, anchors: Anchors, name: string): number | null => {
-  const a = anchors[firstAlias(doc, name) ?? ''];
+  const a = primaryBoxOfName(doc, name, anchors);
   return a ? Math.round(a.top * 1000) / 1000 : null;
 };
 const parentLabelOf = (doc: FormDoc, name: string): string => {
@@ -69,10 +70,9 @@ export function optionGroupCandidates(doc: FormDoc, anchors: Anchors): OptionGro
     const options = raw.flatMap((o) => (Array.isArray(o) && typeof o[0] === 'string' ? [{ alias: o[0], label: plainText((o[1] as { formattedText?: unknown } | null)?.formattedText) }] : []));
     const label = labelOf(doc, n.name);
     const parentLabel = parentLabelOf(doc, n.name);
-    const first = options[0] && doc.uiSchema[n.name] ? (((raw[0] as unknown[])[1] as { pdfMappings?: string[] } | null)?.pdfMappings?.[0]) : undefined;
-    const a = first ? anchors[first] : undefined;
+    const a = primaryBox(doc, n, anchors);
     out.push({
-      alias: n.name, label, numbered: /^\s*\d+[.)]/.test(label), page: a ? a.page + 1 : null, parentLabel,
+      alias: n.name, label, numbered: isNumbered(label) || inNumberedQuestion(doc, n.name), page: a ? a.page + 1 : null, parentLabel,
       formPf: /form\s*pf|reporting purposes/i.test(`${label} ${parentLabel}`), entityOnly: ENTITY_ONLY.test(label) || ENTITY_ONLY.test(parentLabel), options,
     });
   });
@@ -150,7 +150,7 @@ export function followsYesNoQuestion(doc: FormDoc, anchors: Anchors, node: Schem
   const parentName = findParentName(doc, node.name);
   const siblings = parentName ? findNode(doc.schema.properties, parentName)?.properties ?? [] : doc.schema.properties;
   const at = siblings.findIndex((s) => s.name === node.name);
-  const mine = anchors[firstAlias(doc, node.name) ?? ''];
+  const mine = primaryBox(doc, node, anchors);
   for (let i = at - 1, steps = 0; i >= 0 && steps < 4; i -= 1, steps += 1) {
     const w = getWidget(doc, siblings[i]);
     if (w === 'Paragraph') continue;
@@ -161,7 +161,7 @@ export function followsYesNoQuestion(doc: FormDoc, anchors: Anchors, node: Schem
     const options = ((doc.uiSchema[siblings[i].name]?.['ui:multipleOption'] as { options?: unknown[] } | undefined)?.options ?? []) as [string, { formattedText?: unknown; pdfMappings?: string[] }][];
     if (!isBooleanList(options.map((o) => plainText(o[1]?.formattedText)))) return null;
     // close below the answers on the PDF page, when the page is known
-    const last = options.map((o) => anchors[o[1]?.pdfMappings?.[0] ?? '']).filter(Boolean).sort((a, b) => b.bottom - a.bottom)[0];
+    const last = anchorsFor(doc, siblings[i], anchors).sort((a, b) => b.bottom - a.bottom)[0];
     if (mine && last && (mine.page !== last.page || mine.top - last.bottom > 0.2)) return null;
     return labelOf(doc, siblings[i].name);
   }
@@ -281,7 +281,9 @@ export function labelCandidates(doc: FormDoc, anchors: Anchors, pages: PageText[
     let hidden = false;
     for (let cur: string | null | undefined = w.name; cur; cur = findParentName(doc, cur)) if (isInvisible(doc, cur)) hidden = true;
     const alias = firstAlias(doc, w.name);
-    const a = alias ? anchors[alias] : undefined;
+    const node = findNode(doc.schema.properties, w.name);
+    // (a choice is read by groupLabelCandidates: its question is above its boxes, not beside one)
+    const a = node && !['Radio', 'MultipleCheckbox'].includes(getWidget(doc, node)) ? primaryBox(doc, node, anchors) : null;
     if (hidden || !alias || !a) continue;
     const lines = pages.find((p) => p.page === a.page)?.lines ?? [];
     // A line's top is its baseline, which sits at the bottom edge of the box it labels.
@@ -313,6 +315,47 @@ export function labelCandidates(doc: FormDoc, anchors: Anchors, pages: PageText[
 }
 
 export { pageOf };
+
+// ------------------------------ questions printed above choices ------------------------------
+export interface GroupLabelCandidate {
+  alias: string;
+  /** 1-based, as printed. */
+  page: number;
+  /** The printed lines above and beside the choices, nearest last. The question is some neighbouring lines of them. */
+  lines: string[];
+}
+
+/**
+ * A choice (Yes/No, checkboxes) whose question the annotation never highlighted: the question is printed above or to the left of its
+ * boxes. The candidate is the printed lines in the window from the object above it down to its first row of boxes; the model picks the
+ * run of lines that is the question, by number.
+ */
+export function groupLabelCandidates(doc: FormDoc, anchors: Anchors, pages: PageText[]): GroupLabelCandidate[] {
+  const out: GroupLabelCandidate[] = [];
+  const everyBox = Object.entries(anchors);
+  for (const w of allWarnings(doc).filter((x) => x.messages.includes('Missing label'))) {
+    const node = findNode(doc.schema.properties, w.name);
+    if (!node || !['Radio', 'MultipleCheckbox'].includes(getWidget(doc, node))) continue;
+    let hidden = false;
+    for (let cur: string | null | undefined = w.name; cur; cur = findParentName(doc, cur)) if (isInvisible(doc, cur)) hidden = true;
+    const own = aliasesOf(doc, node);
+    const boxes = anchorsFor(doc, node, anchors);
+    if (hidden || boxes.length === 0) continue;
+    const page = boxes[0].page;
+    const top = Math.min(...boxes.filter((b) => b.page === page).map((b) => b.top));
+    const left = Math.min(...boxes.filter((b) => b.page === page).map((b) => b.left));
+    // the object above: nothing printed between it and these boxes is another widget's text
+    const above = everyBox.filter(([alias, a]) => !own.includes(alias) && a.page === page && a.bottom < top - 0.001).map(([, a]) => a.bottom);
+    const from = Math.max(top - 0.16, above.length > 0 ? Math.max(...above) + 0.001 : 0);
+    const text = pages.find((p) => p.page === page)?.lines ?? [];
+    const lines = text
+      .filter((l) => l.top >= from && l.top <= top + 0.012)
+      .map((l) => (l.segments ?? [{ left: 0, right: 1, text: l.text }]).filter((s) => l.top < top - 0.004 || s.right <= left + 0.01).map((s) => s.text).join(' ').replace(/\s+/g, ' ').trim())
+      .filter((t) => /[A-Za-z]{2}/.test(t) && !/^(yes|no)$/i.test(t));
+    if (lines.length > 0) out.push({ alias: w.name, page: page + 1, lines: lines.slice(-9) });
+  }
+  return out;
+}
 
 // ------------------------------ supporting documents ------------------------------
 export interface SupportingDocCandidate {
