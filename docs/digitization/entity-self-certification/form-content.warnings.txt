@@ -1,0 +1,28 @@
+FUND NAME MISSING: the heading "Entity Self-Certification Form" has no subtitle; the fund name is not in the annotation
+GATING CHECKBOX: added mailadd_different before mailadd ("Check this box if the mailing address is different from the registered address above."); a rule must show mailadd only when it is checked
+FOOTNOTE TEXT MISSING: footnote 3 on paragraph_2 has a footnote widget with no text; its text is not in the annotation
+LABEL MISSING: asa_giin_registeredffi_ffi_nonusperson_usperson_entity_crs has no highlighted text (formattedText left empty)
+LABEL MISSING: asa_sponsoringentitygiin_noobtainedgiin_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs has no highlighted text (formattedText left empty)
+FOOTNOTE TEXT MISSING: footnote 7 on asa_sponsoringentityname_noobtainedgiin_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs has a footnote widget with no text; its text is not in the annotation
+FOOTNOTE TEXT MISSING: footnote 7 on name_sponsoredinvestmententity_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs has a footnote widget with no text; its text is not in the annotation
+FOOTNOTE TEXT MISSING: footnote 8 on asa_trusteename_trusteedocumentedtrust_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs has a footnote widget with no text; its text is not in the annotation
+LABEL MISSING: option asa_registeredffi_ffi_nonusperson_usperson_entity_crs has no highlighted text (formattedText left empty)
+FOOTNOTE TEXT MISSING: footnote 6 on asa_noobtainedgiin_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs has a footnote widget with no text; its text is not in the annotation
+FOOTNOTE TEXT MISSING: footnote 9 on asa_nonparticipating_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs has a footnote widget with no text; its text is not in the annotation
+FOOTNOTE TEXT MISSING: footnote 15 on asa_sponsoringentitygiin_sponsoreddirectreportingnffe_groupofnotffi_ffi_nonusperson_usperson_entity_crs has a footnote widget with no text; its text is not in the annotation
+FOOTNOTE TEXT MISSING: footnote 14 on paragraph_6 has a footnote widget with no text; its text is not in the annotation
+FOOTNOTE TEXT MISSING: footnote 13 on holdingcompany_groupoffi_crsclass_entity_crs has a footnote widget with no text; its text is not in the annotation
+FOOTNOTE TEXT MISSING: footnote 10 on asa_mangedbyotherentity_groupofnonparticipatingjurisdictionfi_groupoffi_crsclass_entity_crs has a footnote widget with no text; its text is not in the annotation
+FOOTNOTE TEXT MISSING: footnote 12 on asa_otherinvestmententity_groupofnonparticipatingjurisdictionfi_groupoffi_crsclass_entity_crs has a footnote widget with no text; its text is not in the annotation
+LABEL MISSING: radio group asa_groupofactivenfe_crsclass_entity_crs has no highlighted text (formattedText left empty)
+LABEL MISSING: repeatable repeatable has no highlighted text (formattedText left empty)
+FOOTNOTE TEXT MISSING: footnote 21 on name_controllingperson1_entity_crs_0 has a footnote widget with no text; its text is not in the annotation
+LABEL MISSING: repeatable repeatable_1 has no highlighted text (formattedText left empty)
+LABEL MISSING: printname_entity_crs has no highlighted text (formattedText left empty)
+LABEL MISSING: date_entity_crs has no highlighted text (formattedText left empty)
+LABEL MISSING: position_entity_crs has no highlighted text (formattedText left empty)
+SIGNATURE: signature_entity_crs has no signer name; the types of any other fields signed with it (Date, Name, Title...) are not in the annotation, so only the signature field is mapped
+LABEL MISSING: printname_entity_crs_0 has no highlighted text (formattedText left empty)
+LABEL MISSING: date_entity_crs_0 has no highlighted text (formattedText left empty)
+LABEL MISSING: position_entity_crs_0 has no highlighted text (formattedText left empty)
+SIGNATURE: signature_entity_crs_0 has no signer name; the types of any other fields signed with it (Date, Name, Title...) are not in the annotation, so only the signature field is mapped

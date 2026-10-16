@@ -1,0 +1,482 @@
+{
+  "namespaceFormSchemaMap": {
+    "main": {
+      "schema": {
+        "type": "object",
+        "properties": [
+          {
+            "name": "file0",
+            "type": "null",
+            "title": "Transfer Agreement Template.pdf"
+          },
+          {
+            "name": "demoform",
+            "type": "object",
+            "title": "Demo form",
+            "properties": [
+              {
+                "name": "header",
+                "type": "null",
+                "title": "Header"
+              },
+              {
+                "name": "partnership",
+                "type": "string",
+                "title": "Radio",
+                "enum": [
+                  "Yes",
+                  "No"
+                ]
+              },
+              {
+                "name": "textbox",
+                "type": "string",
+                "title": "Textbox"
+              },
+              {
+                "name": "textbox2",
+                "type": "string",
+                "title": "Textbox 2",
+                "format": "date"
+              },
+              {
+                "name": "paragraph",
+                "type": "null",
+                "title": "Paragraph"
+              },
+              {
+                "name": "class",
+                "type": "string",
+                "title": "Radio 3",
+                "enum": [
+                  "A",
+                  "B",
+                  "N/A"
+                ]
+              },
+              {
+                "name": "class_partnership",
+                "type": "string",
+                "title": "Textbox 3"
+              },
+              {
+                "name": "textbox4",
+                "type": "string",
+                "title": "Textbox 4"
+              },
+              {
+                "name": "textbox5",
+                "type": "number",
+                "title": "Textbox 5"
+              },
+              {
+                "name": "radio2",
+                "type": "string",
+                "title": "Radio 2",
+                "enum": [
+                  "all",
+                  "percentage"
+                ]
+              },
+              {
+                "name": "group",
+                "type": "object",
+                "title": "Group",
+                "properties": [
+                  {
+                    "name": "percentage",
+                    "type": "number",
+                    "title": "Textbox 1"
+                  },
+                  {
+                    "name": "textbox8",
+                    "type": "number",
+                    "title": "Textbox 8"
+                  }
+                ]
+              },
+              {
+                "name": "textbox6",
+                "type": "string",
+                "title": "Textbox 6"
+              },
+              {
+                "name": "textbox7",
+                "type": "string",
+                "title": "Textbox 8"
+              },
+              {
+                "name": "paragraph_2",
+                "type": "null",
+                "title": "Paragraph _2"
+              },
+              {
+                "name": "radio1",
+                "type": "string",
+                "title": "Radio 1",
+                "enum": [
+                  "Yes",
+                  "No"
+                ]
+              },
+              {
+                "name": "textbox9",
+                "type": "string",
+                "title": "Textbox 9"
+              },
+              {
+                "name": "textbox15",
+                "type": "string",
+                "title": "Textbox 15"
+              },
+              {
+                "name": "radio4",
+                "type": "string",
+                "title": "Radio 4",
+                "enum": [
+                  "non",
+                  "loan",
+                  "n/a"
+                ]
+              },
+              {
+                "name": "textbox12",
+                "type": "string",
+                "title": "Textbox 12"
+              },
+              {
+                "name": "textbox11",
+                "type": "string",
+                "title": "Textbox 11"
+              }
+            ]
+          }
+        ]
+      },
+      "uiSchema": {
+        "percentage": {
+          "ui:enabledComment": true,
+          "ui:formattedText": "<p>specify percentage <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:indentation": "24px",
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required",
+          "ui:widget": "Percentage"
+        },
+        "textbox8": {
+          "ui:enabledComment": true,
+          "ui:formattedText": "<p>representing a capital commitment totaling <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:indentation": "24px",
+          "ui:marginBottom": "12px",
+          "ui:pdfMapping": [],
+          "ui:required": "This field is required",
+          "ui:signature": [],
+          "ui:widget": "Money"
+        },
+        "textbox4": {
+          "ui:enabledComment": true,
+          "ui:formattedText": "<p>[exempted] limited partnership interest in <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:marginBottom": "12px",
+          "ui:pdfMapping": [
+            "textbox4"
+          ],
+          "ui:required": "This field is required",
+          "ui:widget": "TextBox"
+        },
+        "textbox15": {
+          "ui:formattedText": "<p>part 2 of item (j)</p>",
+          "ui:invisible": true,
+          "ui:marginBottom": "12px",
+          "ui:pdfMapping": [
+            "textbox10"
+          ],
+          "ui:required": "This field is required",
+          "ui:widget": "TextArea"
+        },
+        "textbox9": {
+          "ui:formattedText": "<p>part 1 of item (j)</p>",
+          "ui:invisible": true,
+          "ui:marginBottom": "12px",
+          "ui:pdfMapping": [
+            "textbox9"
+          ],
+          "ui:required": "This field is required",
+          "ui:widget": "TextArea"
+        },
+        "radio1": {
+          "ui:enabledComment": true,
+          "ui:fixedLayout": "Inline",
+          "ui:formattedText": "<p>Clause (j) Section 1446(f)? <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:marginBottom": "12px",
+          "ui:multipleOption": {
+            "options": [
+              [
+                "Yes",
+                {
+                  "formattedText": "<p>Yes</p>",
+                  "blueprintMetadataMapping": ""
+                }
+              ],
+              [
+                "No",
+                {
+                  "formattedText": "<p>No</p>",
+                  "blueprintMetadataMapping": ""
+                }
+              ]
+            ]
+          },
+          "ui:required": "This field is required",
+          "ui:widget": "Radio"
+        },
+        "textbox5": {
+          "ui:enabledComment": true,
+          "ui:formattedText": "<p>(the “Partnership”) represented by a capital commitment to the Partnership of <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:marginBottom": "12px",
+          "ui:pdfMapping": [
+            "textbox5"
+          ],
+          "ui:required": "This field is required",
+          "ui:widget": "Money"
+        },
+        "partnership": {
+          "ui:enabledComment": true,
+          "ui:fixedLayout": "Inline",
+          "ui:formattedText": "<p>Is it an exempted partnership? <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:marginBottom": "12px",
+          "ui:multipleOption": {
+            "options": [
+              [
+                "Yes",
+                {
+                  "formattedText": "<p>Yes</p>",
+                  "blueprintMetadataMapping": ""
+                }
+              ],
+              [
+                "No",
+                {
+                  "formattedText": "<p>No</p>",
+                  "blueprintMetadataMapping": ""
+                }
+              ]
+            ]
+          },
+          "ui:required": "This field is required",
+          "ui:widget": "Radio"
+        },
+        "textbox6": {
+          "ui:formattedText": "<p>The Transferor desires to transfer and assign [all or %] </p>",
+          "ui:invisible": true,
+          "ui:marginBottom": "12px",
+          "ui:pdfMapping": [
+            "textbox6"
+          ],
+          "ui:signature": [],
+          "ui:widget": "TextBox"
+        },
+        "header": {
+          "ui:formattedText": "Header",
+          "ui:heading": "LIMITED PARTNERSHIP INTEREST TRANSFER AGREEMENT",
+          "ui:marginBottom": "12px",
+          "ui:subtitle": "Demo Form LP Transfer",
+          "ui:widget": "Header"
+        },
+        "group": {
+          "ui:marginBottom": "12px",
+          "ui:widget": "Group"
+        },
+        "textbox": {
+          "ui:formattedText": "<p>LIMITED PARTNERSHIP INTEREST TRANSFER AGREEMENT</p>",
+          "ui:invisible": true,
+          "ui:marginBottom": "12px",
+          "ui:pdfMapping": [
+            "textbox"
+          ],
+          "ui:required": "This field is required",
+          "ui:widget": "TextBox"
+        },
+        "radio2": {
+          "ui:enabledComment": true,
+          "ui:formattedText": "<p>The Transferor desires to transfer and assign <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:marginBottom": "12px",
+          "ui:multipleOption": {
+            "options": [
+              [
+                "all",
+                {
+                  "formattedText": "<p>all of its right, title and interest in and to the Partnership</p>",
+                  "blueprintMetadataMapping": ""
+                }
+              ],
+              [
+                "percentage",
+                {
+                  "formattedText": "<p>___ percentage % of its right, title and interest in and to the Partnership</p>",
+                  "blueprintMetadataMapping": ""
+                }
+              ]
+            ]
+          },
+          "ui:required": "This field is required",
+          "ui:widget": "Dropdown"
+        },
+        "paragraph_2": {
+          "ui:formattedText": "and the Transferor’s right, title and interest, if any, in any associated alternative investment vehicle (an “Alternative Investment Vehicle,” any Alternative Investment Vehicle that is treated as a partnership for U.S. federal income tax purposes, a “Partnership AIV,” and such right, title and interest in the Partnership, and/or any such Partnership AIV or other Alternative Investment Vehicle, collectively, the “Transferred Interests”) to the Transferee pursuant to this Transfer Agreement, and Transferee is willing to assume Transferor’s obligations under the Agreement (defined below) with respect to the Transferred Interests.",
+          "ui:marginBottom": "12px",
+          "ui:pdfMapping": [
+            "paragraph_2"
+          ],
+          "ui:widget": "Paragraph"
+        },
+        "file0": {
+          "ui:fileName": "Transfer Agreement Template.pdf",
+          "ui:widget": "File"
+        },
+        "textbox12": {
+          "ui:formattedText": "<p>item (k)</p>",
+          "ui:invisible": true,
+          "ui:marginBottom": "12px",
+          "ui:pdfMapping": [
+            "textbox11"
+          ],
+          "ui:required": "This field is required",
+          "ui:signature": [],
+          "ui:widget": "TextArea"
+        },
+        "class_partnership": {
+          "ui:formattedText": "<p>prefill class + partnership</p>",
+          "ui:invisible": true,
+          "ui:marginBottom": "12px",
+          "ui:pdfMapping": [
+            "class_and_partnership"
+          ],
+          "ui:required": "This field is required",
+          "ui:signature": [],
+          "ui:widget": "TextBox"
+        },
+        "paragraph": {
+          "ui:formattedText": "are the transferor shown on the signature page hereof (the “Transferor”) and the transferee shown on the signature page hereof (the “Transferee”).",
+          "ui:marginBottom": "12px",
+          "ui:pdfMapping": [
+            "paragraph"
+          ],
+          "ui:widget": "Paragraph"
+        },
+        "textbox7": {
+          "ui:formattedText": "<p>representing a capital commitment totaling</p>",
+          "ui:indentation": "0px",
+          "ui:invisible": true,
+          "ui:marginBottom": "12px",
+          "ui:pdfMapping": [
+            "textbox7"
+          ],
+          "ui:widget": "TextBox"
+        },
+        "textbox2": {
+          "ui:enabledComment": true,
+          "ui:formattedText": "<p>The parties to this Agreement (the “Transfer Agreement”), effective as of <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:marginBottom": "12px",
+          "ui:pdfMapping": [
+            "textbox2"
+          ],
+          "ui:required": "This field is required",
+          "ui:widget": "Date"
+        },
+        "demoform": {
+          "ui:marginBottom": "12px",
+          "ui:widget": "Page"
+        },
+        "class": {
+          "ui:enabledComment": true,
+          "ui:fixedLayout": "Inline",
+          "ui:formattedText": "<p>The Transferor is the owner of the following Class <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:marginBottom": "12px",
+          "ui:multipleOption": {
+            "options": [
+              [
+                "A",
+                {
+                  "formattedText": "<p>Class A</p>",
+                  "blueprintMetadataMapping": ""
+                }
+              ],
+              [
+                "B",
+                {
+                  "formattedText": "<p>Class B</p>",
+                  "blueprintMetadataMapping": ""
+                }
+              ],
+              [
+                "N/A",
+                {
+                  "formattedText": "<p>not applicable</p>",
+                  "blueprintMetadataMapping": ""
+                }
+              ]
+            ]
+          },
+          "ui:required": "This field is required",
+          "ui:widget": "Radio"
+        },
+        "textbox11": {
+          "ui:formattedText": "<p>item (l)</p>",
+          "ui:invisible": true,
+          "ui:marginBottom": "12px",
+          "ui:pdfMapping": [
+            "textbox12"
+          ],
+          "ui:required": "This field is required",
+          "ui:signature": [],
+          "ui:widget": "TextArea"
+        },
+        "radio4": {
+          "ui:enabledComment": true,
+          "ui:fixedLayout": "Inline",
+          "ui:formattedText": "<p>Is the Transferor a Non-Loan Participating Partner or Loan Participating Partner? <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:marginBottom": "12px",
+          "ui:multipleOption": {
+            "options": [
+              [
+                "non",
+                {
+                  "formattedText": "<p>Non-Loan Participating Partner</p>",
+                  "blueprintMetadataMapping": ""
+                }
+              ],
+              [
+                "loan",
+                {
+                  "formattedText": "<p>Loan Participating Partner</p>",
+                  "blueprintMetadataMapping": ""
+                }
+              ],
+              [
+                "n/a",
+                {
+                  "formattedText": "<p>N/A</p>",
+                  "blueprintMetadataMapping": ""
+                }
+              ]
+            ]
+          },
+          "ui:required": "This field is required",
+          "ui:widget": "Radio"
+        }
+      }
+    }
+  },
+  "rules": [
+    {
+      "name": "Sample rule",
+      "value": "// Rule source removed from the public copy.",
+      "defaultNamespace": "main",
+      "description": "Placeholder"
+    }
+  ],
+  "defaultNamespace": "main",
+  "libs": [],
+  "triggerRuleByProperty": false,
+  "gaiaLogicVersion": 200,
+  "cueFieldSchemas": []
+}

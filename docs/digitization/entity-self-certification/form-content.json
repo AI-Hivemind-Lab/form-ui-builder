@@ -1,0 +1,1956 @@
+{
+  "namespaceFormSchemaMap": {
+    "main": {
+      "schema": {
+        "type": "object",
+        "properties": [
+          {
+            "name": "file0",
+            "type": "null",
+            "title": "Entity Self-Certification Form (3).pdf"
+          },
+          {
+            "name": "citco_crs",
+            "type": "object",
+            "title": "Entity Self-Certification Form",
+            "properties": [
+              {
+                "name": "gen_header1",
+                "type": "null",
+                "title": "Entity Self-Certification Form"
+              },
+              {
+                "name": "paragraph_1",
+                "type": "null",
+                "title": "This self-certification form is collected to comply with existing and any future legislation enacted by any jurisdiction"
+              },
+              {
+                "name": "entity_identification",
+                "type": "object",
+                "title": "1. Entity Identification",
+                "properties": [
+                  {
+                    "name": "asa_legalnameofentity_entity_crs",
+                    "type": "string",
+                    "title": "Legal Name of Entity/Branch  *"
+                  },
+                  {
+                    "name": "asa_countryofincorporation_entity_crs",
+                    "type": "string",
+                    "title": "Jurisdiction of organization/incorporation *"
+                  },
+                  {
+                    "name": "regadd",
+                    "type": "object",
+                    "title": "Registered address Do not use a P.O. box or in-care-of address (other than a registered address)",
+                    "properties": [
+                      {
+                        "name": "asa_country_registeredaddress_entity_crs",
+                        "type": "string",
+                        "title": "Country *"
+                      },
+                      {
+                        "name": "asa_numberandstreet_registeredaddress_entity_crs",
+                        "type": "string",
+                        "title": "Address *"
+                      },
+                      {
+                        "name": "asa_city_registeredaddress_entity_crs",
+                        "type": "string",
+                        "title": "City / Town *"
+                      },
+                      {
+                        "name": "asa_state_registeredaddress_entity_crs_us",
+                        "type": "string",
+                        "title": "U.S. States/Territories"
+                      },
+                      {
+                        "name": "asa_state_registeredaddress_entity_crs",
+                        "type": "string",
+                        "title": "State / Province"
+                      },
+                      {
+                        "name": "asa_postcode_registeredaddress_entity_crs_us",
+                        "type": "string",
+                        "title": "ZIP Code"
+                      },
+                      {
+                        "name": "asa_postcode_registeredaddress_entity_crs",
+                        "type": "string",
+                        "title": "Postal Code"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "mailadd_different",
+                    "type": "array",
+                    "title": "mailing address",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "different"
+                      ]
+                    }
+                  },
+                  {
+                    "name": "mailadd",
+                    "type": "object",
+                    "title": "Mailing address If different from above",
+                    "properties": [
+                      {
+                        "name": "asa_country_mailingaddress_entity_crs",
+                        "type": "string",
+                        "title": "Country *"
+                      },
+                      {
+                        "name": "asa_numberandstreet_mailingaddress_entity_crs",
+                        "type": "string",
+                        "title": "Address *"
+                      },
+                      {
+                        "name": "asa_city_mailingaddress_entity_crs",
+                        "type": "string",
+                        "title": "City / Town *"
+                      },
+                      {
+                        "name": "asa_state_mailingaddress_entity_crs_us",
+                        "type": "string",
+                        "title": "U.S. States/Territories"
+                      },
+                      {
+                        "name": "asa_state_mailingaddress_entity_crs",
+                        "type": "string",
+                        "title": "State / Province"
+                      },
+                      {
+                        "name": "asa_postcode_mailingaddress_entity_crs_us",
+                        "type": "string",
+                        "title": "ZIP Code"
+                      },
+                      {
+                        "name": "asa_postcode_mailingaddress_entity_crs",
+                        "type": "string",
+                        "title": "Postal Code"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "countryoftax",
+                "type": "object",
+                "title": "2. Country of Tax Residence and related Taxpayer Identification Number",
+                "properties": [
+                  {
+                    "name": "paragraph_2",
+                    "type": "null",
+                    "title": "Complete the Entity’s place of Tax Residence/Residencies and the associated Tax Identification Number (“TIN”)or function"
+                  },
+                  {
+                    "name": "asa_jurisdiction_taxresidency_entity_crs",
+                    "type": "string",
+                    "title": "Country of Tax Residence *"
+                  },
+                  {
+                    "name": "asa_taxnumber_havetaxnumber_taxresidency_entity_crs",
+                    "type": "string",
+                    "title": "TIN or Functional Equivalent *"
+                  },
+                  {
+                    "name": "asa_reasonnot_havetaxnumber_taxresidency_entity_crs",
+                    "type": "string",
+                    "title": "Or if the Entity is tax resident in a country that generally issues TINs, explain why the Entity does not have a TIN or "
+                  },
+                  {
+                    "name": "asa_jurisdiction_taxresidency_entity_crs_0",
+                    "type": "string",
+                    "title": "Country of Tax Residence *"
+                  },
+                  {
+                    "name": "asa_taxnumber_havetaxnumber_taxresidency_entity_crs_0",
+                    "type": "string",
+                    "title": "TIN or Functional Equivalent *"
+                  },
+                  {
+                    "name": "asa_reasonnot_havetaxnumber_taxresidency_entity_crs_0",
+                    "type": "string",
+                    "title": "Or if the Entity is tax resident in a country that generally issues TINs, explain why the Entity does not have a TIN or "
+                  },
+                  {
+                    "name": "additional_information_explanation_crs_entity",
+                    "type": "string",
+                    "title": "Additional information / explanation (optional)"
+                  },
+                  {
+                    "name": "paragraph_3",
+                    "type": "null",
+                    "title": "ADDITIONAL REQUIREMENTS FOR US PERSON When the Entity is a US Person, an IRS form W-9 must be completed and attached."
+                  },
+                  {
+                    "name": "additionalreqfornonusffi",
+                    "type": "object",
+                    "title": "ADDITIONAL REQUIREMENTS FOR NON-US FOREIGN FINANCIAL INSTITUTIONS (“FFIs”)",
+                    "properties": [
+                      {
+                        "name": "paragraph_4",
+                        "type": "null",
+                        "title": "Non-US Entities that are FFIs for FATCA must complete the below declaration."
+                      },
+                      {
+                        "name": "asa_ffi_nonusperson_usperson_entity_crs",
+                        "type": "string",
+                        "title": "GLOBAL INTERMEDIARY IDENTIFICATION NUMBER (“GIIN”) DECLARATION",
+                        "enum": [
+                          "asa_registeredffi_ffi_nonusperson_usperson_entity_crs",
+                          "asa_sponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                          "asa_nogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+                        ]
+                      },
+                      {
+                        "name": "asa_giin_registeredffi_ffi_nonusperson_usperson_entity_crs",
+                        "type": "string",
+                        "title": "asa_giin_registeredffi_ffi_nonusperson_usperson_entity_crs"
+                      },
+                      {
+                        "name": "asa_sponsoringentityname_obtainedgiin_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                        "type": "string",
+                        "title": "Name of the Sponsoring Entity: *"
+                      },
+                      {
+                        "name": "asa_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                        "type": "string",
+                        "title": "Indicate the reason:",
+                        "enum": [
+                          "asa_noobtainedgiin_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                          "sponsoredinvestmententity_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                          "asa_trusteedocumentedtrust_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                          "asa_obtainedgiin_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                          "exemptbeneficialowner_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                          "asa_certifieddeemedcompliant_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                          "asa_nonparticipating_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                          "other_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+                        ]
+                      },
+                      {
+                        "name": "asa_sponsoringentitygiin_noobtainedgiin_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                        "type": "string",
+                        "title": "asa_sponsoringentitygiin_noobtainedgiin_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+                      },
+                      {
+                        "name": "asa_sponsoringentityname_noobtainedgiin_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                        "type": "string",
+                        "title": "Name of the Sponsoring Entity: *"
+                      },
+                      {
+                        "name": "giin_sponsoredinvestmententity_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                        "type": "string",
+                        "title": "GIIN of the Sponsoring Entity: *"
+                      },
+                      {
+                        "name": "name_sponsoredinvestmententity_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                        "type": "string",
+                        "title": "Name of the Sponsoring Entity: *"
+                      },
+                      {
+                        "name": "asa_trusteegiin_trusteedocumentedtrust_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                        "type": "string",
+                        "title": "GIIN of the Trustee: *"
+                      },
+                      {
+                        "name": "asa_trusteename_trusteedocumentedtrust_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                        "type": "string",
+                        "title": "Name of the Trustee *"
+                      },
+                      {
+                        "name": "asa_exemption_certifieddeemedcompliant_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                        "type": "string",
+                        "title": "Please specify type of CDCFI: *"
+                      },
+                      {
+                        "name": "asa_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                        "type": "string",
+                        "title": "(Must be a classification or exception not covered above and prescribed by the US FATCA Regulations and/or an applicable"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "entityclassification",
+                "type": "object",
+                "title": "3. Entity Classification",
+                "properties": [
+                  {
+                    "name": "paragraph_5",
+                    "type": "null",
+                    "title": "Section 3 must be completed by all Entities, including those resident in the US and UK. Select at least one of the below"
+                  },
+                  {
+                    "name": "asa_groupofnonreportingfi_groupoffi_crsclass_entity_crs",
+                    "type": "string",
+                    "title": "Select option A, B or C",
+                    "enum": [
+                      "asa_nonparticipatingjurisdictionfi_groupoffi_crsclass_entity_crs",
+                      "asa_otherfi_groupofnonparticipatingjurisdictionfi_groupoffi_crsclass_entity_crs",
+                      "holdingcompany_groupoffi_crsclass_entity_crs"
+                    ]
+                  },
+                  {
+                    "name": "asa_groupofnonparticipatingjurisdictionfi_groupoffi_crsclass_entity_crs",
+                    "type": "string",
+                    "title": "Select one of a), b) or c)",
+                    "enum": [
+                      "asa_mangedbyotherentity_groupofnonparticipatingjurisdictionfi_groupoffi_crsclass_entity_crs",
+                      "investmententitywithcriteria_groupofnonparticipatingjurisdictionfi_groupoffi_crsclass_entity_crs",
+                      "asa_otherinvestmententity_groupofnonparticipatingjurisdictionfi_groupoffi_crsclass_entity_crs"
+                    ]
+                  },
+                  {
+                    "name": "asa_groupofactivenfe_crsclass_entity_crs",
+                    "type": "string",
+                    "title": "asa_groupofactivenfe_crsclass_entity_crs",
+                    "enum": [
+                      "asa_regulatedcorporation_groupofactivenfe_crsclass_entity_crs",
+                      "asa_goventityorintercorporcentralbank_groupofactivenfe_crsclass_entity_crs",
+                      "asa_other_groupofactivenfe_crsclass_entity_crs",
+                      "asa_passivenonfinancialforeignentity_crsclass_entity_crs",
+                      "asa_directreportingnffe_groupofnotffi_ffi_nonusperson_usperson_entity_crs",
+                      "asa_sponsoreddirectreportingnffe_groupofnotffi_ffi_nonusperson_usperson_entity_crs"
+                    ]
+                  },
+                  {
+                    "name": "asa_nameofstockexchange_regulatedcorporation_groupofactivenfe_crsclass_entity_crs",
+                    "type": "string",
+                    "title": "Name of established securities market: *"
+                  },
+                  {
+                    "name": "asa_regulatedtradedcorpname_regulatedcorporation_groupofactivenfe_crsclass_entity_crs",
+                    "type": "string",
+                    "title": "If the Entity is a Related Entity of a regularly traded corporation, provide the name of the regularly traded corporatio"
+                  },
+                  {
+                    "name": "asa_criteria_other_groupofactivenfe_crsclass_entity_crs",
+                    "type": "string",
+                    "title": "Please specify qualifying criteria (further details are available in the Appendix definition of “Active Non-Financial En"
+                  },
+                  {
+                    "name": "asa_giin_directreportingnffe_groupofnotffi_ffi_nonusperson_usperson_entity_crs",
+                    "type": "string",
+                    "title": "GIIN: *"
+                  },
+                  {
+                    "name": "asa_sponsoringentitygiin_sponsoreddirectreportingnffe_groupofnotffi_ffi_nonusperson_usperson_entity_crs",
+                    "type": "string",
+                    "title": "GIIN: *"
+                  },
+                  {
+                    "name": "asa_sponsoringentityname_sponsoreddirectreportingnffe_groupofnotffi_ffi_nonusperson_usperson_entity_crs",
+                    "type": "string",
+                    "title": "Name of the Sponsoring Entity *"
+                  },
+                  {
+                    "name": "paragraph_6",
+                    "type": "null",
+                    "title": "Provide details of the Entity’s Controlling Persons in Section 4."
+                  }
+                ]
+              },
+              {
+                "name": "controlling_persons",
+                "type": "object",
+                "title": "4. Controlling Persons",
+                "properties": [
+                  {
+                    "name": "paragraph_7",
+                    "type": "null",
+                    "title": "This section should only be completed if the classification selected in Section 3 directs the Entity to provide Controll"
+                  },
+                  {
+                    "name": "paragraph_8",
+                    "type": "null",
+                    "title": "Provide the information of each individual Controlling Person in the form below. Note that all fields have to be complet"
+                  },
+                  {
+                    "name": "controlling_person_1",
+                    "type": "object",
+                    "title": "controlling_person_1",
+                    "properties": [
+                      {
+                        "name": "name_controllingperson1_entity_crs",
+                        "type": "string",
+                        "title": "Full Name *"
+                      },
+                      {
+                        "name": "group",
+                        "type": "object",
+                        "title": "Full residence address",
+                        "properties": [
+                          {
+                            "name": "country_controllingperson1_entity_crs",
+                            "type": "string",
+                            "title": "Country *"
+                          },
+                          {
+                            "name": "numberandstreet_controllingperson1_entity_crs",
+                            "type": "string",
+                            "title": "Address *"
+                          },
+                          {
+                            "name": "city_controllingperson1_entity_crs",
+                            "type": "string",
+                            "title": "City / Town *"
+                          },
+                          {
+                            "name": "state_controllingperson1_entity_crs_us",
+                            "type": "string",
+                            "title": "U.S. States/Territories"
+                          },
+                          {
+                            "name": "state_controllingperson1_entity_crs",
+                            "type": "string",
+                            "title": "State / Province"
+                          },
+                          {
+                            "name": "zip_controllingperson1_entity_crs_us",
+                            "type": "string",
+                            "title": "ZIP Code"
+                          },
+                          {
+                            "name": "zip_controllingperson1_entity_crs",
+                            "type": "string",
+                            "title": "Postal Code"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "placeofbirth_controllingperson1_entity_crs",
+                        "type": "string",
+                        "title": "Place of birth *"
+                      },
+                      {
+                        "name": "dateofbirth_controllingperson1_entity_crs",
+                        "type": "string",
+                        "title": "Date of birth (DD/MM/YYYY) *",
+                        "format": "date"
+                      },
+                      {
+                        "name": "type_controllingperson1_entity_crs",
+                        "type": "string",
+                        "title": "Type of Controlling Person *"
+                      },
+                      {
+                        "name": "owenershippercentage_controllingperson1_entity_crs",
+                        "type": "number",
+                        "title": "Where controlling by virtue of ownership, please list percentage ownership:"
+                      },
+                      {
+                        "name": "repeatable",
+                        "type": "array",
+                        "title": "repeatable",
+                        "properties": [
+                          {
+                            "name": "countryoftaxresidence_controllingperson1_entity_crs",
+                            "type": "string",
+                            "title": "Country of Tax Residence *"
+                          },
+                          {
+                            "name": "tin_controllingperson1_entity_crs",
+                            "type": "string",
+                            "title": "TIN or Functional Equivalent *"
+                          },
+                          {
+                            "name": "reason_controllingperson1_entity_crs",
+                            "type": "string",
+                            "title": "Or if the individual is tax resident in a country that generally issues TINs, explain why the individual does not have a"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "controlling_person_2",
+                    "type": "object",
+                    "title": "controlling_person_2",
+                    "properties": [
+                      {
+                        "name": "name_controllingperson1_entity_crs_0",
+                        "type": "string",
+                        "title": "Full Name *"
+                      },
+                      {
+                        "name": "group_1",
+                        "type": "object",
+                        "title": "Full residence address",
+                        "properties": [
+                          {
+                            "name": "country_controllingperson1_entity_crs_0",
+                            "type": "string",
+                            "title": "Country *"
+                          },
+                          {
+                            "name": "numberandstreet_controllingperson1_entity_crs_0",
+                            "type": "string",
+                            "title": "Address *"
+                          },
+                          {
+                            "name": "city_controllingperson1_entity_crs_0",
+                            "type": "string",
+                            "title": "City / Town *"
+                          },
+                          {
+                            "name": "state_controllingperson1_entity_crs_0_us",
+                            "type": "string",
+                            "title": "U.S. States/Territories"
+                          },
+                          {
+                            "name": "state_controllingperson1_entity_crs_0",
+                            "type": "string",
+                            "title": "State / Province"
+                          },
+                          {
+                            "name": "zip_controllingperson1_entity_crs_0_us",
+                            "type": "string",
+                            "title": "ZIP Code"
+                          },
+                          {
+                            "name": "zip_controllingperson1_entity_crs_0",
+                            "type": "string",
+                            "title": "Postal Code"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "placeofbirth_controllingperson1_entity_crs_0",
+                        "type": "string",
+                        "title": "Place of birth *"
+                      },
+                      {
+                        "name": "dateofbirth_controllingperson1_entity_crs_0",
+                        "type": "string",
+                        "title": "Date of birth (DD/MM/YYYY) *",
+                        "format": "date"
+                      },
+                      {
+                        "name": "type_controllingperson1_entity_crs_0",
+                        "type": "string",
+                        "title": "Type of Controlling Person *"
+                      },
+                      {
+                        "name": "owenershippercentage_controllingperson1_entity_crs_0",
+                        "type": "number",
+                        "title": "Where controlling by virtue of ownership, please list percentage ownership:"
+                      },
+                      {
+                        "name": "repeatable_1",
+                        "type": "array",
+                        "title": "repeatable_1",
+                        "properties": [
+                          {
+                            "name": "countryoftaxresidence_controllingperson2_entity_crs",
+                            "type": "string",
+                            "title": "Country of Tax Residence *"
+                          },
+                          {
+                            "name": "tin_controllingperson2_entity_crs",
+                            "type": "string",
+                            "title": "TIN or Functional Equivalent *"
+                          },
+                          {
+                            "name": "reason_controllingperson2_entity_crs",
+                            "type": "string",
+                            "title": "Or if the individual is tax resident in a country that generally issues TINs, explain why the individual does not have a"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "declaration",
+                "type": "object",
+                "title": "5. Declaration and Signature",
+                "properties": [
+                  {
+                    "name": "paragraph_9",
+                    "type": "null",
+                    "title": "I/We declare (as an authorized signatory of the Entity) that the information provided in this form is, to the best of my"
+                  }
+                ]
+              },
+              {
+                "name": "signature",
+                "type": "object",
+                "title": "signature",
+                "properties": [
+                  {
+                    "name": "paragraph_10",
+                    "type": "null",
+                    "title": "For further information regarding Citco’s privacy policy, refer to: https://citco.com/footer/privacy-policy/ I certify t"
+                  },
+                  {
+                    "name": "printname_entity_crs",
+                    "type": "string",
+                    "title": "printname_entity_crs"
+                  },
+                  {
+                    "name": "date_entity_crs",
+                    "type": "string",
+                    "title": "date_entity_crs"
+                  },
+                  {
+                    "name": "position_entity_crs",
+                    "type": "string",
+                    "title": "position_entity_crs"
+                  },
+                  {
+                    "name": "signature_entity_crs",
+                    "type": "null",
+                    "title": "Signature"
+                  },
+                  {
+                    "name": "printname_entity_crs_0",
+                    "type": "string",
+                    "title": "printname_entity_crs_0"
+                  },
+                  {
+                    "name": "date_entity_crs_0",
+                    "type": "string",
+                    "title": "date_entity_crs_0"
+                  },
+                  {
+                    "name": "position_entity_crs_0",
+                    "type": "string",
+                    "title": "position_entity_crs_0"
+                  },
+                  {
+                    "name": "signature_entity_crs_0",
+                    "type": "null",
+                    "title": "Signature"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "uiSchema": {
+        "gen_header1": {
+          "ui:widget": "Header",
+          "ui:formattedText": "Header",
+          "ui:heading": "Entity Self-Certification Form",
+          "ui:headerType": "Heading1",
+          "ui:marginBottom": "12px"
+        },
+        "paragraph_1": {
+          "ui:widget": "Paragraph",
+          "ui:formattedText": "<p>This self-certification form is collected to comply with existing and any future legislation enacted by any jurisdiction that provides for or is intended to secure the exchange of information (including, without limitation, under US FATCA and related Intergovernmental Agreements (“IGA”), the OECD Common Reporting Standard for Automatic Exchange of Financial Account Information (“CRS”) as updated by the Consolidated text of the Common Reporting Standard (2025) (CRS 2.0), including the EU Directive 2011/16/EU on Administrative Cooperation in the field of Taxation, (“EU DAC 2”) as amended by EU DAC8 , or any other jurisdiction's legislation which is similar in effect to any of the above, any official interpretations or guidance thereof, or any law or regulations implementing an intergovernmental approach thereto, or any agreements made pursuant to the implementation of the foregoing, in each case as enacted, made, amended or replaced from time to time.</p><p>US FATCA, CRS, EU DAC 2, applicable laws, regulations and/or guidance notes, are together referred to as the Automatic Exchange of Information (“AEOI”) regimes <span data-title=\"&lt;p&gt;For further information on the Automatic Exchange of Information, refer to: &lt;/p&gt;&lt;p&gt;CRS: &lt;a href=&quot;http://oecd.org/tax/automatic-exchange/common-reporting-standard&quot; rel=&quot;noopener noreferrer&quot; target=&quot;_blank&quot;&gt;http://www.oecd.org/tax/automatic-exchange/common-reporting-standard&lt;/a&gt; &lt;/p&gt;&lt;p&gt;CARF: International Standards for Automatic Exchange of Information in Tax Matters | OECD &lt;/p&gt;&lt;p&gt;FATCA: &lt;a href=&quot;https://irs.gov/businesses/corporations/foreign-account-tax-compliance-act-fatca&quot; rel=&quot;noopener noreferrer&quot; target=&quot;_blank&quot;&gt;&lt;span&gt;https://www.irs.gov/businesses/corporations/foreign-account-tax-compliance-act-fatca&lt;/span&gt;&lt;/a&gt; &lt;/p&gt;&lt;p&gt;EU DAC 2: &lt;a href=&quot;https://taxation-customs.ec.europa.eu/taxation-1/tax-co-operation-and-control/general-overview/enhanced-administrative-cooperation-&quot; rel=&quot;noopener noreferrer&quot; target=&quot;_blank&quot;&gt;&lt;span&gt;https://taxation-customs.ec.europa.eu/taxation-1/tax-co-operation-and-control/general-overview/enhanced-administrative-cooperation-&lt;/span&gt;&lt;/a&gt; field-direct-taxation_en &lt;/p&gt;&lt;p&gt;EU DAC8: DAC8 - Taxation and Customs Union - European Commission &lt;/p&gt;&lt;p&gt;For accounts in Irish FIs, refer to: &lt;a href=&quot;https://revenue.ie/en/companies-and-charities/international-tax/aeoi/index.aspx&quot; rel=&quot;noopener noreferrer&quot; target=&quot;_blank&quot;&gt;&lt;span&gt;https://www.revenue.ie/en/companies-and-charities/international-tax/aeoi/index.aspx&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;\">FOOT_NOTE_HERE</span> .</p><p>Note that definitions may differ between AEOI regimes.</p><p>Please seek professional advice when completing this form. Type directly into this form and return a signed copy.</p><p>All Entities must complete Sections 1, 2 and 3. Section 4 should be completed only where instructed to do so.</p><p>Please refer to instructions throughout this form and additional instructions/definitions in the Appendix (<a href=\"http://citcoforms.com/grp/ESCAPP.pdf).\" rel=\"noopener noreferrer\" target=\"_blank\">http://www.citcoforms.com/grp/ESCAPP.pdf).</a></p>",
+          "ui:marginBottom": "12px"
+        },
+        "asa_legalnameofentity_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>Legal Name of Entity/Branch <span data-title=\"&lt;p&gt;For Citco use only: &lt;/p&gt;&lt;p&gt;− C&amp;amp;T: Entity ViewPoint Number: &lt;/p&gt;&lt;p&gt;− CB: Account Number:&lt;/p&gt;\">FOOT_NOTE_HERE</span>  <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_legalnameofentity_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "asa_countryofincorporation_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>Jurisdiction of organization/incorporation <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_countryofincorporation_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "asa_numberandstreet_registeredaddress_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>Address <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_numberandstreet_registeredaddress_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "asa_city_registeredaddress_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>City / Town <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_city_registeredaddress_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "asa_state_registeredaddress_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>State / Province</p>",
+          "ui:pdfMapping": [
+            "asa_state_registeredaddress_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px"
+        },
+        "asa_postcode_registeredaddress_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>Postal Code</p>",
+          "ui:pdfMapping": [
+            "asa_postcode_registeredaddress_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px"
+        },
+        "asa_country_registeredaddress_entity_crs": {
+          "ui:widget": "Country",
+          "ui:formattedText": "<p>Country <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_country_registeredaddress_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required",
+          "ui:placeholder": "Select country"
+        },
+        "asa_state_registeredaddress_entity_crs_us": {
+          "ui:widget": "State",
+          "ui:formattedText": "<p>U.S. States/Territories <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_state_registeredaddress_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "asa_postcode_registeredaddress_entity_crs_us": {
+          "ui:widget": "CustomFormat",
+          "ui:formattedText": "<p>ZIP Code <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_postcode_registeredaddress_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:customFormat": "USZIP",
+          "ui:required": "This field is required"
+        },
+        "regadd": {
+          "ui:widget": "Group",
+          "ui:marginBottom": "12px",
+          "ui:enabledComment": true,
+          "ui:formattedText": "<p><strong>Registered address </strong></p><p>Do not use a P.O. box or in-care-of address (other than a registered address)</p>"
+        },
+        "mailadd_different": {
+          "ui:widget": "MultipleCheckbox",
+          "ui:formattedText": "",
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:multipleOption": {
+            "options": [
+              [
+                "different",
+                {
+                  "formattedText": "<p>Check this box if the mailing address is different from the registered address above.</p>",
+                  "blueprintMetadataMapping": ""
+                }
+              ]
+            ]
+          }
+        },
+        "asa_numberandstreet_mailingaddress_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>Address <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_numberandstreet_mailingaddress_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "asa_city_mailingaddress_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>City / Town <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_city_mailingaddress_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "asa_state_mailingaddress_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>State / Province</p>",
+          "ui:pdfMapping": [
+            "asa_state_mailingaddress_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px"
+        },
+        "asa_postcode_mailingaddress_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>Postal Code</p>",
+          "ui:pdfMapping": [
+            "asa_postcode_mailingaddress_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px"
+        },
+        "asa_country_mailingaddress_entity_crs": {
+          "ui:widget": "Country",
+          "ui:formattedText": "<p>Country <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_country_mailingaddress_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required",
+          "ui:placeholder": "Select country"
+        },
+        "asa_state_mailingaddress_entity_crs_us": {
+          "ui:widget": "State",
+          "ui:formattedText": "<p>U.S. States/Territories <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_state_mailingaddress_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "asa_postcode_mailingaddress_entity_crs_us": {
+          "ui:widget": "CustomFormat",
+          "ui:formattedText": "<p>ZIP Code <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_postcode_mailingaddress_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:customFormat": "USZIP",
+          "ui:required": "This field is required"
+        },
+        "mailadd": {
+          "ui:widget": "Group",
+          "ui:marginBottom": "12px",
+          "ui:enabledComment": true,
+          "ui:formattedText": "<p><strong>Mailing address </strong></p><p>If different from above</p>"
+        },
+        "entity_identification": {
+          "ui:widget": "Group",
+          "ui:marginBottom": "20px",
+          "ui:enabledComment": true,
+          "ui:formattedText": "<p><strong>1. Entity Identification</strong></p>"
+        },
+        "paragraph_2": {
+          "ui:widget": "Paragraph",
+          "ui:formattedText": "<p>Complete the Entity’s place of Tax Residence/Residencies and the associated Tax Identification Number (“TIN”)<span data-title=\"&lt;p&gt;&lt;/p&gt;\">FOOT_NOTE_HERE</span>or functional equivalent for each place of Tax Residence indicated in the table below. <span data-title=\"&lt;p&gt;If you are completing this form on behalf of a branch, the country of tax residence of the head office of the legal entity should be declared in this section, not the country where the branch is located.&lt;/p&gt;\">FOOT_NOTE_HERE</span> </p><p>Entities that are dual tax residents and rely on tiebreaker rules contained in tax treaties to solve cases of double residence for tax purposes may not rely on such tiebreaker rules on this self-certification and must declare all their jurisdictions of tax residence.</p>",
+          "ui:marginBottom": "12px"
+        },
+        "asa_jurisdiction_taxresidency_entity_crs": {
+          "ui:widget": "Country",
+          "ui:formattedText": "<p>Country of Tax Residence <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_jurisdiction_taxresidency_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required",
+          "ui:placeholder": "Select country"
+        },
+        "asa_taxnumber_havetaxnumber_taxresidency_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>TIN or Functional Equivalent <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_taxnumber_havetaxnumber_taxresidency_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "asa_reasonnot_havetaxnumber_taxresidency_entity_crs": {
+          "ui:widget": "TextArea",
+          "ui:formattedText": "<p>Or if the Entity is tax resident in a country that generally issues TINs, explain why the Entity does not have a TIN or functional equivalent</p>",
+          "ui:pdfMapping": [
+            "asa_reasonnot_havetaxnumber_taxresidency_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px"
+        },
+        "asa_jurisdiction_taxresidency_entity_crs_0": {
+          "ui:widget": "Country",
+          "ui:formattedText": "<p>Country of Tax Residence <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_jurisdiction_taxresidency_entity_crs_0"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required",
+          "ui:placeholder": "Select country"
+        },
+        "asa_taxnumber_havetaxnumber_taxresidency_entity_crs_0": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>TIN or Functional Equivalent <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_taxnumber_havetaxnumber_taxresidency_entity_crs_0"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "asa_reasonnot_havetaxnumber_taxresidency_entity_crs_0": {
+          "ui:widget": "TextArea",
+          "ui:formattedText": "<p>Or if the Entity is tax resident in a country that generally issues TINs, explain why the Entity does not have a TIN or functional equivalent</p>",
+          "ui:pdfMapping": [
+            "asa_reasonnot_havetaxnumber_taxresidency_entity_crs_0"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px"
+        },
+        "additional_information_explanation_crs_entity": {
+          "ui:widget": "TextArea",
+          "ui:formattedText": "<p>Additional information / explanation (optional)</p>",
+          "ui:pdfMapping": [
+            "additional_information_explanation_crs_entity"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px"
+        },
+        "paragraph_3": {
+          "ui:widget": "Paragraph",
+          "ui:formattedText": "<p><strong>ADDITIONAL REQUIREMENTS FOR US PERSON </strong></p><p>When the Entity is a US Person, an IRS form W-9 must be completed and attached.</p>",
+          "ui:marginBottom": "12px"
+        },
+        "paragraph_4": {
+          "ui:widget": "Paragraph",
+          "ui:formattedText": "<p>Non-US Entities that are FFIs for FATCA must complete the below declaration.</p>",
+          "ui:marginBottom": "12px"
+        },
+        "asa_giin_registeredffi_ffi_nonusperson_usperson_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "",
+          "ui:pdfMapping": [
+            "asa_giin_registeredffi_ffi_nonusperson_usperson_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required",
+          "ui:placeholder": "e.g. XXXXXX.XXXXX.XX.XXX"
+        },
+        "asa_sponsoringentityname_obtainedgiin_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>Name of the Sponsoring Entity: <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_sponsoringentityname_obtainedgiin_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required",
+          "ui:placeholder": "e.g. XXXXXX.XXXXX.XX.XXX"
+        },
+        "asa_sponsoringentitygiin_noobtainedgiin_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "",
+          "ui:pdfMapping": [
+            "asa_sponsoringentitygiin_noobtainedgiin_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required",
+          "ui:placeholder": "e.g. XXXXXX.XXXXX.XX.XXX"
+        },
+        "asa_sponsoringentityname_noobtainedgiin_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>Name of the Sponsoring Entity:<span data-title=\"&lt;p&gt;&lt;/p&gt;\">FOOT_NOTE_HERE</span> <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_sponsoringentityname_noobtainedgiin_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required",
+          "ui:placeholder": "e.g. XXXXXX.XXXXX.XX.XXX"
+        },
+        "giin_sponsoredinvestmententity_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>GIIN of the Sponsoring Entity: <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "giin_sponsoredinvestmententity_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required",
+          "ui:placeholder": "e.g. XXXXXX.XXXXX.XX.XXX"
+        },
+        "name_sponsoredinvestmententity_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>Name of the Sponsoring Entity:<span data-title=\"&lt;p&gt;&lt;/p&gt;\">FOOT_NOTE_HERE</span> <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "name_sponsoredinvestmententity_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required",
+          "ui:placeholder": "e.g. XXXXXX.XXXXX.XX.XXX"
+        },
+        "asa_trusteegiin_trusteedocumentedtrust_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>GIIN of the Trustee: <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_trusteegiin_trusteedocumentedtrust_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required",
+          "ui:placeholder": "e.g. XXXXXX.XXXXX.XX.XXX"
+        },
+        "asa_trusteename_trusteedocumentedtrust_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>Name of the Trustee<span data-title=\"&lt;p&gt;&lt;/p&gt;\">FOOT_NOTE_HERE</span> <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_trusteename_trusteedocumentedtrust_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required",
+          "ui:placeholder": "e.g. XXXXXX.XXXXX.XX.XXX"
+        },
+        "asa_exemption_certifieddeemedcompliant_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>Please specify type of CDCFI: <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_exemption_certifieddeemedcompliant_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required",
+          "ui:placeholder": "e.g. XXXXXX.XXXXX.XX.XXX"
+        },
+        "asa_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs": {
+          "ui:widget": "TextArea",
+          "ui:formattedText": "<p>(Must be a classification or exception not covered above and prescribed by the US FATCA Regulations and/or an applicable IGA.) <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "asa_ffi_nonusperson_usperson_entity_crs": {
+          "ui:widget": "Radio",
+          "ui:formattedText": "<p>GLOBAL INTERMEDIARY IDENTIFICATION NUMBER (“GIIN”) DECLARATION</p>",
+          "ui:pdfMapping": [
+            "asa_ffi_nonusperson_usperson_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:clearable": false,
+          "ui:multipleOption": {
+            "options": [
+              [
+                "asa_registeredffi_ffi_nonusperson_usperson_entity_crs",
+                {
+                  "formattedText": "",
+                  "pdfMappings": [
+                    "asa_registeredffi_ffi_nonusperson_usperson_entity_crs"
+                  ],
+                  "blueprintMetadataMapping": "",
+                  "fieldsBelow": [
+                    "asa_giin_registeredffi_ffi_nonusperson_usperson_entity_crs"
+                  ]
+                }
+              ],
+              [
+                "asa_sponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                {
+                  "formattedText": "<p>The non-US Entity is a Sponsored Investment Entity FFI with its own GIIN</p>",
+                  "pdfMappings": [
+                    "asa_sponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+                  ],
+                  "blueprintMetadataMapping": "",
+                  "fieldsBelow": [
+                    "asa_sponsoringentityname_obtainedgiin_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+                  ]
+                }
+              ],
+              [
+                "asa_nogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                {
+                  "formattedText": "<p>The non-US Financial Institution is unable to provide a GIIN</p>",
+                  "pdfMappings": [
+                    "asa_nogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+                  ],
+                  "blueprintMetadataMapping": "",
+                  "fieldsBelow": [
+                    "asa_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+                  ]
+                }
+              ]
+            ]
+          }
+        },
+        "asa_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs": {
+          "ui:widget": "Radio",
+          "ui:formattedText": "<p>Indicate the reason:</p>",
+          "ui:pdfMapping": [
+            "asa_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:clearable": false,
+          "ui:multipleOption": {
+            "options": [
+              [
+                "asa_noobtainedgiin_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                {
+                  "formattedText": "<p>Sponsored FFI that does not require a GIIN, as it has no US reportable accounts and is resident in a Model 1 IGA jurisdiction:<span data-title=\"&lt;p&gt;&lt;/p&gt;\">FOOT_NOTE_HERE</span></p>",
+                  "pdfMappings": [
+                    "asa_noobtainedgiin_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+                  ],
+                  "blueprintMetadataMapping": "",
+                  "fieldsBelow": [
+                    "asa_sponsoringentitygiin_noobtainedgiin_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                    "asa_sponsoringentityname_noobtainedgiin_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+                  ]
+                }
+              ],
+              [
+                "sponsoredinvestmententity_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                {
+                  "formattedText": "<p>Sponsored Closely Held Investment Entity</p>",
+                  "pdfMappings": [
+                    "sponsoredinvestmententity_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+                  ],
+                  "blueprintMetadataMapping": "",
+                  "fieldsBelow": [
+                    "giin_sponsoredinvestmententity_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                    "name_sponsoredinvestmententity_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+                  ]
+                }
+              ],
+              [
+                "asa_trusteedocumentedtrust_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                {
+                  "formattedText": "<p>Trustee-Documented Trust</p>",
+                  "pdfMappings": [
+                    "asa_trusteedocumentedtrust_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+                  ],
+                  "blueprintMetadataMapping": "",
+                  "fieldsBelow": [
+                    "asa_trusteegiin_trusteedocumentedtrust_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                    "asa_trusteename_trusteedocumentedtrust_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+                  ]
+                }
+              ],
+              [
+                "asa_obtainedgiin_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                {
+                  "formattedText": "<p>It applied for a GIIN and will provide its GIIN within 90 days.</p>",
+                  "pdfMappings": [
+                    "asa_obtainedgiin_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+                  ],
+                  "blueprintMetadataMapping": ""
+                }
+              ],
+              [
+                "exemptbeneficialowner_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                {
+                  "formattedText": "<p>It is an Exempt Beneficial Owner.</p>",
+                  "pdfMappings": [
+                    "exemptbeneficialowner_groupofsponsored_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+                  ],
+                  "blueprintMetadataMapping": ""
+                }
+              ],
+              [
+                "asa_certifieddeemedcompliant_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                {
+                  "formattedText": "<p>It is another type of Certified Deemed Compliant Financial Institution (“CDCFI”).</p>",
+                  "pdfMappings": [
+                    "asa_certifieddeemedcompliant_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+                  ],
+                  "blueprintMetadataMapping": "",
+                  "fieldsBelow": [
+                    "asa_exemption_certifieddeemedcompliant_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+                  ]
+                }
+              ],
+              [
+                "asa_nonparticipating_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                {
+                  "formattedText": "<p>It is a Non-Participating Foreign Financial Institution.<span data-title=\"&lt;p&gt;&lt;/p&gt;\">FOOT_NOTE_HERE</span></p>",
+                  "pdfMappings": [
+                    "asa_nonparticipating_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+                  ],
+                  "blueprintMetadataMapping": ""
+                }
+              ],
+              [
+                "other_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs",
+                {
+                  "formattedText": "<p>Other, specify:</p>",
+                  "pdfMappings": [
+                    "other_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+                  ],
+                  "blueprintMetadataMapping": "",
+                  "fieldsBelow": [
+                    "asa_groupofnogiinorsponsored_ffi_nonusperson_usperson_entity_crs"
+                  ]
+                }
+              ]
+            ]
+          }
+        },
+        "additionalreqfornonusffi": {
+          "ui:widget": "Group",
+          "ui:marginBottom": "12px",
+          "ui:enabledComment": true,
+          "ui:formattedText": "<p><strong>ADDITIONAL REQUIREMENTS FOR NON-US FOREIGN FINANCIAL INSTITUTIONS (“FFIs”)</strong></p>"
+        },
+        "countryoftax": {
+          "ui:widget": "Group",
+          "ui:marginBottom": "20px",
+          "ui:enabledComment": true,
+          "ui:formattedText": "<p><strong>2. Country of Tax Residence and related Taxpayer Identification Number</strong></p>"
+        },
+        "paragraph_5": {
+          "ui:widget": "Paragraph",
+          "ui:formattedText": "<p>Section 3 must be completed by all Entities, including those resident in the US and UK. Select at least one of the below classification: • Financial Institutions: select options A, B or C • Non-Financial Entities: select options D, E, F, G, H or I – Proceed to page 7</p>",
+          "ui:marginBottom": "12px"
+        },
+        "asa_nameofstockexchange_regulatedcorporation_groupofactivenfe_crsclass_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>Name of established securities market: <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_nameofstockexchange_regulatedcorporation_groupofactivenfe_crsclass_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "asa_regulatedtradedcorpname_regulatedcorporation_groupofactivenfe_crsclass_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>If the Entity is a Related Entity of a regularly traded corporation, provide the name of the regularly traded corporation:</p>",
+          "ui:pdfMapping": [
+            "asa_regulatedtradedcorpname_regulatedcorporation_groupofactivenfe_crsclass_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px"
+        },
+        "asa_criteria_other_groupofactivenfe_crsclass_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>Please specify qualifying criteria (further details are available in the Appendix definition of “Active Non-Financial Entity”): <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_criteria_other_groupofactivenfe_crsclass_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "asa_giin_directreportingnffe_groupofnotffi_ffi_nonusperson_usperson_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>GIIN: <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_giin_directreportingnffe_groupofnotffi_ffi_nonusperson_usperson_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required",
+          "ui:placeholder": "e.g. XXXXXX.XXXXX.XX.XXX"
+        },
+        "asa_sponsoringentitygiin_sponsoreddirectreportingnffe_groupofnotffi_ffi_nonusperson_usperson_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>GIIN<span data-title=\"&lt;p&gt;&lt;/p&gt;\">FOOT_NOTE_HERE</span>: <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_sponsoringentitygiin_sponsoreddirectreportingnffe_groupofnotffi_ffi_nonusperson_usperson_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required",
+          "ui:placeholder": "e.g. XXXXXX.XXXXX.XX.XXX"
+        },
+        "asa_sponsoringentityname_sponsoreddirectreportingnffe_groupofnotffi_ffi_nonusperson_usperson_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>Name of the Sponsoring Entity <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "asa_sponsoringentityname_sponsoreddirectreportingnffe_groupofnotffi_ffi_nonusperson_usperson_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "paragraph_6": {
+          "ui:widget": "Paragraph",
+          "ui:formattedText": "<p>Provide details of the Entity’s Controlling Persons in Section 4.<span data-title=\"&lt;p&gt;&lt;/p&gt;\">FOOT_NOTE_HERE</span></p>",
+          "ui:marginBottom": "12px"
+        },
+        "asa_groupofnonreportingfi_groupoffi_crsclass_entity_crs": {
+          "ui:widget": "Radio",
+          "ui:formattedText": "<p>Select option A, B or C</p>",
+          "ui:pdfMapping": [
+            "asa_groupofnonreportingfi_groupoffi_crsclass_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:clearable": false,
+          "ui:multipleOption": {
+            "options": [
+              [
+                "asa_nonparticipatingjurisdictionfi_groupoffi_crsclass_entity_crs",
+                {
+                  "formattedText": "<p>A. Investment Entity</p>",
+                  "pdfMappings": [
+                    "asa_nonparticipatingjurisdictionfi_groupoffi_crsclass_entity_crs"
+                  ],
+                  "blueprintMetadataMapping": "",
+                  "fieldsBelow": [
+                    "asa_groupofnonparticipatingjurisdictionfi_groupoffi_crsclass_entity_crs"
+                  ]
+                }
+              ],
+              [
+                "asa_otherfi_groupofnonparticipatingjurisdictionfi_groupoffi_crsclass_entity_crs",
+                {
+                  "formattedText": "<p>B. Depository Institution, Custodial Institution, Specified Insurance Company </p><p>Refer to the Appendix for definitions.</p>",
+                  "pdfMappings": [
+                    "asa_otherfi_groupofnonparticipatingjurisdictionfi_groupoffi_crsclass_entity_crs"
+                  ],
+                  "blueprintMetadataMapping": ""
+                }
+              ],
+              [
+                "holdingcompany_groupoffi_crsclass_entity_crs",
+                {
+                  "formattedText": "<p>C. Holding Company or Treasury Centre</p><p> Applicable for FATCA only and to Entities resident in non-IGA countries or, in very limited circumstances, to Entities residing in the following IGA countries: Malta, Ireland, Netherlands and UK. Refer to the definition of Holding Company and Treasury Center in the Appendix for more detail. </p><p>In addition, for CRS purposes, one of the other options (Financial Institutions A to B or Non-Financial Entities D to G) must be completed, and if the Entity is qualified as a Passive NFE under G, provide Controlling Persons details in Section 4.<span data-title=\"&lt;p&gt;&lt;/p&gt;\">FOOT_NOTE_HERE</span></p>",
+                  "pdfMappings": [
+                    "holdingcompany_groupoffi_crsclass_entity_crs"
+                  ],
+                  "blueprintMetadataMapping": ""
+                }
+              ]
+            ]
+          }
+        },
+        "asa_groupofnonparticipatingjurisdictionfi_groupoffi_crsclass_entity_crs": {
+          "ui:widget": "Radio",
+          "ui:formattedText": "<p>Select one of a), b) or c)</p>",
+          "ui:pdfMapping": [
+            "asa_groupofnonparticipatingjurisdictionfi_groupoffi_crsclass_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:clearable": false,
+          "ui:multipleOption": {
+            "options": [
+              [
+                "asa_mangedbyotherentity_groupofnonparticipatingjurisdictionfi_groupoffi_crsclass_entity_crs",
+                {
+                  "formattedText": "<p>a) An Investment Entity resident in the United States or other Non- Participating CRS Jurisdiction and managed by another Financial Institution </p><p>Refer to the list of Participating CRS Jurisdictions <a href=\"http://oecd.org/tax/transparency/AEOI-commitments.pdf\" rel=\"noopener noreferrer\" target=\"_blank\">http://www.oecd.org/tax/transparency/AEOI-commitments.pdf</a> For CRS purposes, provide details of the Entity’s Controlling Persons in Section 4.<span data-title=\"&lt;p&gt;&lt;/p&gt;\">FOOT_NOTE_HERE</span></p>",
+                  "pdfMappings": [
+                    "asa_mangedbyotherentity_groupofnonparticipatingjurisdictionfi_groupoffi_crsclass_entity_crs"
+                  ],
+                  "blueprintMetadataMapping": ""
+                }
+              ],
+              [
+                "investmententitywithcriteria_groupofnonparticipatingjurisdictionfi_groupoffi_crsclass_entity_crs",
+                {
+                  "formattedText": "<p>b) An Investment Entity that meets the below criteria: 50% or more of its gross income is attributable to the relevant financial activities <span data-title=\"&lt;p&gt;Relevant activities: conducts as a business one or more of the following activities or operations for or on behalf of a customer*: i. trading in money market instruments; foreign exchange; exchange, interest rate and index instruments; transferable securities; or commodity futures trading; ii. individual and collective portfolio management; or iii. otherwise investing, administering, or managing Financial Assets or money or Relevant Crypto-Assets on behalf of other persons. *investors in collective investment funds can be considered “customers” and collective investment funds can be considered to conduct activities as a “business”&lt;/p&gt;\">FOOT_NOTE_HERE</span> , or if the Investment Entity is managed by another Financial Institution, from investing, reinvesting or trading in Financial Assets or Relevant Crypto-Assets, during the shorter of:</p><ul><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span>the three-year period ending on 31 December of the year preceding the year in which the determination is made; or • </li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span>the period during which the Entity has been in existence</li></ul>",
+                  "pdfMappings": [
+                    "investmententitywithcriteria_groupofnonparticipatingjurisdictionfi_groupoffi_crsclass_entity_crs"
+                  ],
+                  "blueprintMetadataMapping": ""
+                }
+              ],
+              [
+                "asa_otherinvestmententity_groupofnonparticipatingjurisdictionfi_groupoffi_crsclass_entity_crs",
+                {
+                  "formattedText": "<p>c) An Investment Entity (i.e. for FATCA) that does not meet the criteria in b) above </p><p>For CRS purposes, one of Non-Financial Entities options (D to G) must be completed, and if the Entity is qualified as a Passive NFE under G, provide Controlling Persons details in Section 4.<span data-title=\"&lt;p&gt;&lt;/p&gt;\">FOOT_NOTE_HERE</span></p>",
+                  "pdfMappings": [
+                    "asa_otherinvestmententity_groupofnonparticipatingjurisdictionfi_groupoffi_crsclass_entity_crs"
+                  ],
+                  "blueprintMetadataMapping": ""
+                }
+              ]
+            ]
+          }
+        },
+        "asa_groupofactivenfe_crsclass_entity_crs": {
+          "ui:widget": "Radio",
+          "ui:formattedText": "",
+          "ui:pdfMapping": [
+            "asa_groupofactivenfe_crsclass_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:clearable": false,
+          "ui:multipleOption": {
+            "options": [
+              [
+                "asa_regulatedcorporation_groupofactivenfe_crsclass_entity_crs",
+                {
+                  "formattedText": "<p>D. Active Non-Financial Entity</p><p>A corporation the stock of which is regularly traded on an established securities market, or a related corporation thereof. </p>",
+                  "pdfMappings": [
+                    "asa_regulatedcorporation_groupofactivenfe_crsclass_entity_crs"
+                  ],
+                  "blueprintMetadataMapping": "",
+                  "fieldsBelow": [
+                    "asa_nameofstockexchange_regulatedcorporation_groupofactivenfe_crsclass_entity_crs",
+                    "asa_regulatedtradedcorpname_regulatedcorporation_groupofactivenfe_crsclass_entity_crs"
+                  ]
+                }
+              ],
+              [
+                "asa_goventityorintercorporcentralbank_groupofactivenfe_crsclass_entity_crs",
+                {
+                  "formattedText": "<p>E. Active Non-Financial Entity A Government Entity, Central Bank or International Organization.</p>",
+                  "pdfMappings": [
+                    "asa_goventityorintercorporcentralbank_groupofactivenfe_crsclass_entity_crs"
+                  ],
+                  "blueprintMetadataMapping": ""
+                }
+              ],
+              [
+                "asa_other_groupofactivenfe_crsclass_entity_crs",
+                {
+                  "formattedText": "<p>F. Active Non-Financial Entity </p><p>Other than options D or E.</p>",
+                  "pdfMappings": [
+                    "asa_other_groupofactivenfe_crsclass_entity_crs"
+                  ],
+                  "blueprintMetadataMapping": "",
+                  "fieldsBelow": [
+                    "asa_criteria_other_groupofactivenfe_crsclass_entity_crs"
+                  ]
+                }
+              ],
+              [
+                "asa_passivenonfinancialforeignentity_crsclass_entity_crs",
+                {
+                  "formattedText": "<p>G. Passive Non-Financial Entity </p><p>Provide details of the Entity’s Controlling Persons in Section 4.</p>",
+                  "pdfMappings": [
+                    "asa_passivenonfinancialforeignentity_crsclass_entity_crs"
+                  ],
+                  "blueprintMetadataMapping": ""
+                }
+              ],
+              [
+                "asa_directreportingnffe_groupofnotffi_ffi_nonusperson_usperson_entity_crs",
+                {
+                  "formattedText": "<p>H. Direct reporting Non- Financial Foreign Entity </p><p>Provide details of the Entity’s Controlling Persons in Section 4.</p>",
+                  "pdfMappings": [
+                    "asa_directreportingnffe_groupofnotffi_ffi_nonusperson_usperson_entity_crs"
+                  ],
+                  "blueprintMetadataMapping": "",
+                  "fieldsBelow": [
+                    "asa_giin_directreportingnffe_groupofnotffi_ffi_nonusperson_usperson_entity_crs"
+                  ]
+                }
+              ],
+              [
+                "asa_sponsoreddirectreportingnffe_groupofnotffi_ffi_nonusperson_usperson_entity_crs",
+                {
+                  "formattedText": "<p>I. Sponsored Direct reporting Non-Financial Foreign Entity</p>",
+                  "pdfMappings": [
+                    "asa_sponsoreddirectreportingnffe_groupofnotffi_ffi_nonusperson_usperson_entity_crs"
+                  ],
+                  "blueprintMetadataMapping": "",
+                  "fieldsBelow": [
+                    "asa_sponsoringentitygiin_sponsoreddirectreportingnffe_groupofnotffi_ffi_nonusperson_usperson_entity_crs",
+                    "asa_sponsoringentityname_sponsoreddirectreportingnffe_groupofnotffi_ffi_nonusperson_usperson_entity_crs",
+                    "paragraph_6"
+                  ]
+                }
+              ]
+            ]
+          }
+        },
+        "entityclassification": {
+          "ui:widget": "Group",
+          "ui:marginBottom": "20px",
+          "ui:enabledComment": true,
+          "ui:formattedText": "<p><strong>3. Entity Classification</strong></p>"
+        },
+        "paragraph_7": {
+          "ui:widget": "Paragraph",
+          "ui:formattedText": "<p>This section should only be completed if the classification selected in Section 3 directs the Entity to provide Controlling Person details. </p><p><strong>If directed to provide Controlling Person information, failure to complete Section 4 will result in the self- certification being considered invalid. </strong></p><p>A Controlling Person is any natural person that meets any of the following tests, in the order below:</p><ul><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span>For companies and partnerships, Controlling Person means the natural person(s) that have a direct or indirect controlling ownership interest or voting rights (typically on the basis of a certain percentage, e.g. 10% or more) in the Entity.</li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span>If no natural person(s) exercises control through ownership or voting rights per the above, the Controlling Person(s) of the Entity will be the natural person(s) who exercises control of the Entity through other means.</li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span>Where no natural person(s) is/are identified as exercising control of the Entity through ownership interests or through other means above, the Controlling Person is deemed to be the natural person who holds the position of senior managing official. • </li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span>For trusts and other similar legal arrangements (e.g. foundations), Controlling Person means the natural persons being settlor, the trustee(s), the protector (if any), the beneficiaries or classes of beneficiaries, and any other natural person exercising ultimate effective control over the trust or similar legal arrangement. </li></ul><p><strong>U.S. Controlling Persons </strong></p><p>When the Controlling Person is a US citizen/US passport holder and/or resident in the US for tax purposes (a green card holder or resident under the substantial presence test), an IRS form W-9 must be completed and attached.</p><ul><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span>If the Controlling Person is no longer a US citizen, a certificate of loss of nationality and a copy of the foreign passport must be provided. </li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span>US Controlling Persons of US entities do not need to provide a W9 or US TIN.</li></ul>",
+          "ui:marginBottom": "12px"
+        },
+        "paragraph_8": {
+          "ui:widget": "Paragraph",
+          "ui:formattedText": "<p>Provide the information of each individual Controlling Person in the form below. Note that all fields have to be completed for the Controlling Person(s). </p><p>Controlling Persons that are dual tax residents and rely on tiebreaker rules contained in tax treaties to solve cases of double residence for tax purposes may not rely on such tiebreaker rules on this self-certification and must declare all their jurisdictions of tax residence.</p>",
+          "ui:marginBottom": "12px"
+        },
+        "name_controllingperson1_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>Full Name <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "name_controllingperson1_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "numberandstreet_controllingperson1_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>Address <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "numberandstreet_controllingperson1_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "city_controllingperson1_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>City / Town <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "city_controllingperson1_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "state_controllingperson1_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>State / Province</p>",
+          "ui:pdfMapping": [
+            "state_controllingperson1_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px"
+        },
+        "zip_controllingperson1_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>Postal Code</p>",
+          "ui:pdfMapping": [
+            "zip_controllingperson1_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px"
+        },
+        "country_controllingperson1_entity_crs": {
+          "ui:widget": "Country",
+          "ui:formattedText": "<p>Country <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "country_controllingperson1_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required",
+          "ui:placeholder": "Select country"
+        },
+        "state_controllingperson1_entity_crs_us": {
+          "ui:widget": "State",
+          "ui:formattedText": "<p>U.S. States/Territories <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "state_controllingperson1_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "zip_controllingperson1_entity_crs_us": {
+          "ui:widget": "CustomFormat",
+          "ui:formattedText": "<p>ZIP Code <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "zip_controllingperson1_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:customFormat": "USZIP",
+          "ui:required": "This field is required"
+        },
+        "group": {
+          "ui:widget": "Group",
+          "ui:marginBottom": "12px",
+          "ui:enabledComment": true,
+          "ui:formattedText": "<p><strong>Full residence address</strong></p>"
+        },
+        "placeofbirth_controllingperson1_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>Place of birth <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "placeofbirth_controllingperson1_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "dateofbirth_controllingperson1_entity_crs": {
+          "ui:widget": "Date",
+          "ui:formattedText": "<p>Date of birth (DD/MM/YYYY) <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "dateofbirth_controllingperson1_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "type_controllingperson1_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>Type of Controlling Person <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "type_controllingperson1_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "owenershippercentage_controllingperson1_entity_crs": {
+          "ui:widget": "Percentage",
+          "ui:formattedText": "<p>Where controlling by virtue of ownership, please list percentage ownership:</p>",
+          "ui:pdfMapping": [
+            "owenershippercentage_controllingperson1_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px"
+        },
+        "countryoftaxresidence_controllingperson1_entity_crs": {
+          "ui:widget": "Country",
+          "ui:formattedText": "<p>Country of Tax Residence <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "countryoftaxresidence_controllingperson1_entity_crs",
+            "countryoftaxresidence_controllingperson1_entity_crs_0"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required",
+          "ui:placeholder": "Select country"
+        },
+        "tin_controllingperson1_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>TIN or Functional Equivalent <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "tin_controllingperson1_entity_crs",
+            "tin_controllingperson1_entity_crs_0"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "reason_controllingperson1_entity_crs": {
+          "ui:widget": "TextArea",
+          "ui:formattedText": "<p>Or if the individual is tax resident in a country that generally issues TINs, explain why the individual does not have a TIN or functional equivalent.</p>",
+          "ui:pdfMapping": [
+            "reason_controllingperson1_entity_crs",
+            "reason_controllingperson1_entity_crs_0"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px"
+        },
+        "repeatable": {
+          "ui:widget": "Repeatable",
+          "ui:formattedText": "",
+          "ui:maxItems": 2,
+          "ui:itemName": "tax residence",
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px"
+        },
+        "controlling_person_1": {
+          "ui:widget": "Group",
+          "ui:marginBottom": "12px",
+          "ui:enabledComment": true
+        },
+        "name_controllingperson1_entity_crs_0": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>Full Name<span data-title=\"&lt;p&gt;&lt;/p&gt;\">FOOT_NOTE_HERE</span> <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "name_controllingperson1_entity_crs_0"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "numberandstreet_controllingperson1_entity_crs_0": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>Address <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "numberandstreet_controllingperson1_entity_crs_0"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "city_controllingperson1_entity_crs_0": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>City / Town <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "city_controllingperson1_entity_crs_0"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "state_controllingperson1_entity_crs_0": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>State / Province</p>",
+          "ui:pdfMapping": [
+            "state_controllingperson1_entity_crs_0"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px"
+        },
+        "zip_controllingperson1_entity_crs_0": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>Postal Code</p>",
+          "ui:pdfMapping": [
+            "zip_controllingperson1_entity_crs_0"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px"
+        },
+        "country_controllingperson1_entity_crs_0": {
+          "ui:widget": "Country",
+          "ui:formattedText": "<p>Country <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "country_controllingperson1_entity_crs_0"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required",
+          "ui:placeholder": "Select country"
+        },
+        "state_controllingperson1_entity_crs_0_us": {
+          "ui:widget": "State",
+          "ui:formattedText": "<p>U.S. States/Territories <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "state_controllingperson1_entity_crs_0"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "zip_controllingperson1_entity_crs_0_us": {
+          "ui:widget": "CustomFormat",
+          "ui:formattedText": "<p>ZIP Code <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "zip_controllingperson1_entity_crs_0"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:customFormat": "USZIP",
+          "ui:required": "This field is required"
+        },
+        "group_1": {
+          "ui:widget": "Group",
+          "ui:marginBottom": "12px",
+          "ui:enabledComment": true,
+          "ui:formattedText": "<p><strong>Full residence address</strong></p>"
+        },
+        "placeofbirth_controllingperson1_entity_crs_0": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>Place of birth <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "placeofbirth_controllingperson1_entity_crs_0"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "dateofbirth_controllingperson1_entity_crs_0": {
+          "ui:widget": "Date",
+          "ui:formattedText": "<p>Date of birth (DD/MM/YYYY) <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "dateofbirth_controllingperson1_entity_crs_0"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "type_controllingperson1_entity_crs_0": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>Type of Controlling Person <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "type_controllingperson1_entity_crs_0"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "owenershippercentage_controllingperson1_entity_crs_0": {
+          "ui:widget": "Percentage",
+          "ui:formattedText": "<p>Where controlling by virtue of ownership, please list percentage ownership:</p>",
+          "ui:pdfMapping": [
+            "owenershippercentage_controllingperson1_entity_crs_0"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px"
+        },
+        "countryoftaxresidence_controllingperson2_entity_crs": {
+          "ui:widget": "Country",
+          "ui:formattedText": "<p>Country of Tax Residence <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "countryoftaxresidence_controllingperson2_entity_crs",
+            "countryoftaxresidence_controllingperson2_entity_crs_0"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required",
+          "ui:placeholder": "Select country"
+        },
+        "tin_controllingperson2_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "<p>TIN or Functional Equivalent <span style=\"color: rgb(219, 55, 55);\">*</span></p>",
+          "ui:pdfMapping": [
+            "tin_controllingperson2_entity_crs",
+            "tin_controllingperson2_entity_crs_0"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "reason_controllingperson2_entity_crs": {
+          "ui:widget": "TextArea",
+          "ui:formattedText": "<p>Or if the individual is tax resident in a country that generally issues TINs, explain why the individual does not have a TIN or functional equivalent.</p>",
+          "ui:pdfMapping": [
+            "reason_controllingperson2_entity_crs",
+            "reason_controllingperson2_entity_crs_0"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px"
+        },
+        "repeatable_1": {
+          "ui:widget": "Repeatable",
+          "ui:formattedText": "",
+          "ui:maxItems": 2,
+          "ui:itemName": "tax residence",
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px"
+        },
+        "controlling_person_2": {
+          "ui:widget": "Group",
+          "ui:marginBottom": "12px",
+          "ui:enabledComment": true
+        },
+        "controlling_persons": {
+          "ui:widget": "Group",
+          "ui:marginBottom": "20px",
+          "ui:enabledComment": true,
+          "ui:formattedText": "<p><strong>4. Controlling Persons</strong></p>"
+        },
+        "paragraph_9": {
+          "ui:widget": "Paragraph",
+          "ui:formattedText": "<p>I/We declare (as an authorized signatory of the Entity) that the information provided in this form is, to the best of my/our knowledge and belief, accurate and complete. I/We understand that the recipient is responsible for processing the information contained in this form (including personal data relating to the Controlling Persons). I/We warrant that any personal data provided by me/us to the recipient has been processed in accordance with the applicable data protection legislation and that, to the extent necessary, I/we have obtained the valid consent of the data subjects (Controlling Persons) to provide such personal data to the recipient for the purposes of this self-certification form. I/we have informed the data subjects (Controlling Persons) of their right to access the information that relates to them and which is reported to the relevant tax authorities and of their right to rectify this information. I/We undertake to advise the recipient promptly and provide an updated self-certification form within 30 days where any change in circumstances occurs which causes any of the information contained in this form to be inaccurate or incomplete. In case where the form is prepared on behalf of a model 1 IGA sponsored investment entity without its own GIIN as at 1.1.2017 and the applicable model 1 IGA allows for such exception we undertake to obtain a GIIN within 90 days of a US reportable account being identified and to communicate the replacement GIIN immediately to the recipient. I/We understand that I/we am/are required to reply to each information request sent to the Entity by the recipient and that failure to do so may have a negative impact on the reporting of information relating to the Entity and/or its Controlling Persons, such as potentially reporting to the wrong foreign tax authority. Where legally obliged to do so, I/we hereby consent to the recipient sharing this information with the relevant tax authorities pursuant to international agreements and domestic laws under the AEOI regimes. I/We understand that the recipient and/or the tax authorities may exchange this information, along with other information such as account balances or value at year-end, and where relevant, certain payments made with respect to the account during the calendar year, with tax authorities in other jurisdictions. I/We expressly acknowledge, agree and allow the Citco Group of Companies (Citco)22 to store the information contained in this form on a centralised electronic database at secure sites possibly located outside the tax residence jurisdiction(s) of the Entity or its Controlling Person(s), and in respect of which I/we agree that: • the information contained in this form may be made available to employees of Citco and any of its Affiliates (whether or not outside the tax residence jurisdiction(s) of the Entity or its Controlling Person); • Citco or any other of its Affiliates (whether or not outside the tax residence jurisdiction(s) of the Entity or its Controlling Person) shall be entitled to use the information contained in this form to enable classification under any law, regulatory or other governmental enactment (e.g. foreign tax compliance purposes) and to carry out any necessary registration and compliance as prescribed by such law, regulations or governmental enactment; and • this may imply a transfer of information to jurisdictions where the level of data protection may not be as high as within the tax residence jurisdiction(s) of the Entity or its Controlling Person.</p>",
+          "ui:marginBottom": "12px"
+        },
+        "declaration": {
+          "ui:widget": "Group",
+          "ui:marginBottom": "20px",
+          "ui:enabledComment": true,
+          "ui:formattedText": "<p><strong>5. Declaration and Signature</strong></p>"
+        },
+        "paragraph_10": {
+          "ui:widget": "Paragraph",
+          "ui:formattedText": "<p>For further information regarding Citco’s privacy policy, refer to: https://citco.com/footer/privacy-policy/ I certify that I am authorised to sign for the Entity in respect of all the account(s) to which this form relates. (See Appendix for list of positions that are typically authorized to sign for various types of structures.)</p>",
+          "ui:marginBottom": "12px"
+        },
+        "printname_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "",
+          "ui:pdfMapping": [
+            "printname_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "date_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "",
+          "ui:pdfMapping": [
+            "date_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "position_entity_crs": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "",
+          "ui:pdfMapping": [
+            "position_entity_crs"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "signature_entity_crs": {
+          "ui:widget": "Signature",
+          "ui:formattedText": "Signature",
+          "ui:marginBottom": "12px",
+          "ui:pdfMapping": [],
+          "ui:signature": [
+            {
+              "mapping": "signature_entity_crs",
+              "signatureType": "Signature",
+              "isOptional": false
+            }
+          ]
+        },
+        "printname_entity_crs_0": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "",
+          "ui:pdfMapping": [
+            "printname_entity_crs_0"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "date_entity_crs_0": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "",
+          "ui:pdfMapping": [
+            "date_entity_crs_0"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "position_entity_crs_0": {
+          "ui:widget": "TextBox",
+          "ui:formattedText": "",
+          "ui:pdfMapping": [
+            "position_entity_crs_0"
+          ],
+          "ui:enabledComment": true,
+          "ui:marginBottom": "12px",
+          "ui:required": "This field is required"
+        },
+        "signature_entity_crs_0": {
+          "ui:widget": "Signature",
+          "ui:formattedText": "Signature",
+          "ui:marginBottom": "12px",
+          "ui:pdfMapping": [],
+          "ui:signature": [
+            {
+              "mapping": "signature_entity_crs_0",
+              "signatureType": "Signature",
+              "isOptional": false
+            }
+          ]
+        },
+        "signature": {
+          "ui:widget": "Group",
+          "ui:marginBottom": "20px",
+          "ui:enabledComment": true
+        },
+        "citco_crs": {
+          "ui:widget": "Page",
+          "ui:marginBottom": "12px",
+          "ui:pdfMapping": [],
+          "ui:signature": []
+        },
+        "file0": {
+          "ui:widget": "File",
+          "ui:fileName": "Entity Self-Certification Form (3).pdf"
+        }
+      }
+    }
+  },
+  "rules": [],
+  "defaultNamespace": "main",
+  "libs": [],
+  "triggerRuleByProperty": false,
+  "gaiaLogicVersion": 200,
+  "cueFieldSchemas": []
+}
